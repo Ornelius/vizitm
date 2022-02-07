@@ -277,13 +277,13 @@ class RequestViewManage
                     $high = '';
                 }
                 $imageOption[$i]= [
-                    'tag'   => 'div',
+                    ///'tag'   => 'div',
                     'width' => $width,
                     'high'  =>  $high,
                     'alt'   => $request->building->address . ' ' . RequestHelper::roomName($request->room) . ' - ' . $text,
                     'style' => $style,
                     'title' => $title,
-                    'data-video' => '{source:[{src:"/uploads/request/origion/9/2.mp4", type:"video/mp4"}], attributes:{playsinline:true, controls:true}}',
+                    //'data-video' => '{source:[{src:"/uploads/request/origion/9/2.mp4", type:"video/mp4"}], attributes:{playsinline:true, controls:true}}',
                 ];
                 if($photo->sort === Photo::TYPE_VIDEO){
                     $hrefvideo = Html::a(
