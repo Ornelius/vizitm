@@ -55,6 +55,10 @@ class RequestViewManage
         $viewName            = null
     )
     {
+        $label = 'В работе у сотрудника';
+        if ($hasDone === true)
+            $label = 'Выполнил сотрудник';
+
         $this->content = GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
@@ -132,14 +136,14 @@ class RequestViewManage
                     'attribute'         => 'work_whom',
                     'contentOptions'    => ['style' =>'vertical-align: middle;'],
                     'headerOptions'     => ['style' => 'width:10vh;vertical-align: middle;'],
-                    'label'             => 'В работе у сотрудника',
+                    'label'             => $label,
                     'format'            => 'raw',
                     'filter'            => UserHelper::ListPositionUsers(),
                     'value'             => function(Request $request)
                     {
                         return Users::findUserByID($request->work_whom)->lastname;
                     },
-                    'visible'           => $hasWork or $hasDeuWork,
+                    'visible'           => $hasWork or $hasDeuWork or $hasDone,
                 ],
                 [
                     'attribute' => 'done_at',
