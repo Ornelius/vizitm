@@ -242,12 +242,14 @@ class RequestViewManage
         $hrefvideo = null;
         $hrefpdf = null;
         $due_date = null;
+        $title = 'Заявку сформировал: '. Users::getFullName($request->user_id);
         if(!$request->photo){
             $items[0] = [
                 'thumb' => '@web/uploads/noimage/noimage.png',
                 'src'   => '@web/uploads/noimage/noimage.png',
                 'imgOptions' =>  [
                     'width' => '100%',
+                    'title' => $title,
                     'alt' => 'No Image',
                 ],
             ];
@@ -276,6 +278,7 @@ class RequestViewManage
                     'high'  =>  $high,
                     'alt'   => $request->building->address . ' ' . RequestHelper::roomName($request->room) . ' - ' . $text,
                     'style' => $style,
+                    'title' => $title,
                     'data-video' => '{source:[{src:"/uploads/request/origion/9/2.mp4", type:"video/mp4"}], attributes:{playsinline:true, controls:true}}',
                 ];
                 if($photo->sort === Photo::TYPE_VIDEO){
@@ -381,7 +384,7 @@ class RequestViewManage
             ]) . '</div>' .'<div class="d-flex align-items-center flex-column" style="width:5%;margin: 6px; padding: 6px;">' . $hrefvideo . $hrefpdf .
 
             '</div>
-                            <div class="ml-auto d-flex align-items-center" style="margin: 3px; padding: 3px;" >' . StringHelper::truncate($request->description, 200) .'</div>
+                            <div class="ml-auto d-flex align-items-center" style="margin: 3px; padding: 3px;" >' . StringHelper::truncate($request->description, 250) .'</div>
                   </div><div class="d-flex flex-row"><div class="ml-auto d-flex align-items-center" style="font-size-adjust: inherit">'. $due_date .'</div></div>' ;
 
     }
