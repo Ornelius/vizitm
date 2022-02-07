@@ -1,0 +1,70 @@
+.video-background {
+    background: #000000;
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: -11;
+}
+.site {
+    background: url(/images/qid.png) repeat;
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: -1;
+    text-align: center;
+    padding-top: 20%;
+    color: white;
+    font-size: 25px;
+}
+
+@media (min-aspect-ratio: 16/9) {
+    .video-foreground { width:100%; height: auto; }
+}
+@media (max-aspect-ratio: 16/9) {
+    .video-foreground { width: auto; height: 100%; }
+}
+/* include Google Web fonts: */
+@import url('https://fonts.googleapis.com/css?family=Meie+Script|Shadows+Into+Light|Arvo|Monda');
+.font_meie_script {
+    width: 100%;
+    height: 100%;
+    border: 5px solid;
+    color: white;
+    -webkit-text-fill-color: white;
+    border-color: white;
+}
+
+
+.mybtn {
+    background: url(/images/strp.png);
+    width: 166px;
+    height: 54px;
+    color: white;
+    border: 3px solid;
+    font-size: 14pt;
+    padding: 10px;
+}
+#loginform-username, #loginform-password {
+    background: url(/images/strp.png);
+    width: 100%;
+    height: 54px;
+    color: white;
+    -webkit-text-fill-color: white;
+    border: 4px solid;
+    font-size: 14pt;
+    padding: 10px;
+    border-color: white;
+}
+#loginform-username  {
+    background: url(/images/strp.png);
+    width: 100%;
+    height: 54px;
+    color: white;
+    -webkit-text-fill-color: white;
+    border: 4px solid;
+    font-size: 14pt;
+    padding: 10px;
+    border-color: white;
+}
+
+.checkbox label {
+    color: white;
+}
