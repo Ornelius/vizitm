@@ -4,6 +4,7 @@
 namespace vizitm\helpers;
 
 
+use Exception;
 use yii\helpers\ArrayHelper;
 
 class RoomHelper
@@ -26,6 +27,9 @@ class RoomHelper
         ];
     }
 
+    /**
+     * @throws Exception
+     */
     public static function roomName(int $room_id): ?string
     {
         return ArrayHelper::getValue(self::roomList(), $room_id);
