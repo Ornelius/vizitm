@@ -252,7 +252,7 @@ class RequestViewManage
                 'thumb' => '@web/uploads/noimage/noimage.png',
                 'src'   => '@web/uploads/noimage/noimage.png',
                 'imgOptions' =>  [
-                    'width' => '100%',
+                    'width' => '90px',
                     'title' => $title,
                     'alt' => 'No Image',
                 ],
