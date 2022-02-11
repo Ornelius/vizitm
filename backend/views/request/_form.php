@@ -30,7 +30,18 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'building_id')->dropDownList(RequestHelper::addressList(), ['prompt' => 'Выберите адрес объекта недвижимости']) ?>
 
-    <?= $form->field($model, 'description')->textarea(['rows' => 4, 'cols' => 5, 'maxlength' => true, 'placeholder' => 'Опешите проблему!']) ?>
+    <?=
+    //$form->field($model, 'description')->textarea(['rows' => 4, 'cols' => 5, 'maxlength' => true, 'placeholder' => 'Опишите проблему!'])
+    $form->field($model, 'description')->widget(\yii\redactor\widgets\Redactor::className(), [
+        'clientOptions' => [
+            'imageManagerJson' => ['/redactor/upload/image-json'],
+            'imageUpload' => ['/redactor/upload/image'],
+            'fileUpload' => ['/redactor/upload/file'],
+            'lang' => 'ru',
+            'buttonsHide' => ['image','file','code'],
+            //'plugins' => ['clips', 'fontcolor', 'imagemanager']
+        ]
+    ]) ?>
 
     <?= $form->field($model, 'type')->dropDownList(RequestHelper::typeRequestList(), ['prompt' => 'Выберите тип заявки']) ?>
 
@@ -53,7 +64,7 @@ use yii\widgets\ActiveForm;
                 ]
             ]);
         } catch (Exception $e) {
-            throw new NotFoundHttpException(431, 'Не отображает информацию DatePicker');
+            throw new NotFoundHttpException($e->getMessage(), 'Не отображает информацию DatePicker');
         }
     ?>
 
