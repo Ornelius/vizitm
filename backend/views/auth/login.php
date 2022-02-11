@@ -1,10 +1,12 @@
 <?php
+
+use vizitm\forms\LoginForm;
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $model \vizitm\forms\LoginForm */
+/* @var $form ActiveForm */
+/* @var $model LoginForm */
 
 $this->title = 'Sign In';
 
