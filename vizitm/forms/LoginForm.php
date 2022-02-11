@@ -2,7 +2,7 @@
 namespace vizitm\forms;
 
 use yii\base\Model;
-use vizitm\entities\User;
+use vizitm\entities\Users;
 
 /**
  * Login form
@@ -27,7 +27,7 @@ class LoginForm extends Model
     }
     public function validatePassword()
     {
-        $user = User::findByUsername($this->username);
+        $user = Users::findByUsername($this->username);
 
         if (!$user || !$user->validatePassword($this->password)) {
             $this->addError('password', 'Неправильное имя пользователя или пароль.');
