@@ -34,9 +34,9 @@ use yii\widgets\ActiveForm;
     //$form->field($model, 'description')->textarea(['rows' => 4, 'cols' => 5, 'maxlength' => true, 'placeholder' => 'Опишите проблему!'])
     $form->field($model, 'description')->widget(\yii\redactor\widgets\Redactor::className(), [
         'clientOptions' => [
-            'imageManagerJson' => ['/redactor/upload/image-json'],
-            'imageUpload' => ['/redactor/upload/image'],
-            'fileUpload' => ['/redactor/upload/file'],
+            //'imageManagerJson' => ['/redactor/upload/image-json'],
+            //'imageUpload' => ['/redactor/upload/image'],
+            //'fileUpload' => ['/redactor/upload/file'],
             'lang' => 'ru',
             'buttonsHide' => ['image','file','code'],
             //'plugins' => ['clips', 'fontcolor', 'imagemanager']
