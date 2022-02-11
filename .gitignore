@@ -45,6 +45,6 @@ phpunit.phar
 /common/uploads
 /frontend/uploads
 /backend/uploads
-/backend/config
+/backend/config/main.php
 
 

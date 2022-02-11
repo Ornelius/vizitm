@@ -7,6 +7,7 @@ use vizitm\entities\Users;
 use vizitm\helpers\RequestHelper;
 use yii\base\InvalidConfigException;
 use yii\helpers\Html;
+use yii\redactor\widgets\Redactor;
 use yii\web\JqueryAsset;
 use yii\web\NotFoundHttpException;
 use yii\widgets\ActiveForm;
@@ -32,7 +33,7 @@ use yii\widgets\ActiveForm;
 
     <?=
     //$form->field($model, 'description')->textarea(['rows' => 4, 'cols' => 5, 'maxlength' => true, 'placeholder' => 'Опишите проблему!'])
-    $form->field($model, 'description')->widget(\yii\redactor\widgets\Redactor::className(), [
+    $form->field($model, 'description')->widget(Redactor::class, [
         'clientOptions' => [
             //'imageManagerJson' => ['/redactor/upload/image-json'],
             //'imageUpload' => ['/redactor/upload/image'],
