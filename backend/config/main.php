@@ -18,12 +18,12 @@ return [
     'modules' => [
         'debug' => [
             'class' => 'yii\debug\Module',
-            'allowedIPs' => ['*']
+            'allowedIPs' => ['!192.168.3.*']
         ],
         'redactor' => 'yii\redactor\RedactorModule',
         'gii'	=> [
             'class' => 'yii\gii\Module',
-            'allowedIPs' => ['*'],
+            'allowedIPs' => ['!192.168.3.*'],
         ],
     ],
     'components' => [
