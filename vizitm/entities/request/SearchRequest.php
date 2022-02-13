@@ -12,9 +12,12 @@ use yii\data\ActiveDataProvider;
  */
 class SearchRequest extends Request
 {
-    /**
-     * @var mixed|null
-     */
+    public ?string $done_range      = null;
+    public ?string $done_start      = null;
+    public ?string $done_end        = null;
+    public ?string $created_range   = null;
+    public ?string $created_start   = null;
+    public ?string $created_end     = null;
 
     /**
      * {@inheritdoc}
@@ -24,6 +27,9 @@ class SearchRequest extends Request
         return [
             [['id', 'building_id', 'user_id', 'created_at', 'deleted', 'deleted_at', 'done', 'done_at', 'invoice', 'invoce_at', 'type_of_work', 'type', 'due_date', 'room', 'work_whom'], 'integer'],
             [['description', 'description_done'], 'safe'],
+            [['done_start', 'done_end', 'created_start', 'created_end'], 'date', 'format' => 'php:Y-m-d'],
+            [['done_range'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
+            [['created_range'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
         ];
     }
 
@@ -43,10 +49,9 @@ class SearchRequest extends Request
      * @param int $status
      * @return ActiveDataProvider
      */
-    public function search(array $params, int $status): ActiveDataProvider
+    public function search(array $params, int $status)
     {
         $position = Users::findUserByID(Yii::$app->user->getId())->position;
-
 
         $query = Request::find()->joinWith(['building','photo']);
         if($status === Request::STATUS_NEW) {
@@ -120,7 +125,7 @@ class SearchRequest extends Request
             'deleted'                       => ['deleted' => null],
             'deleted_at'                    => $this->deleted_at,
             'done'                          => $this->done,
-            'done_at'                       => $this->done_at,
+            //'done_at'                       => $this->done_at,
             'request.type'                  => $this->type,
             'invoice'                       => $this->invoice,
             'invoce_at'                     => $this->invoce_at,
@@ -132,8 +137,11 @@ class SearchRequest extends Request
 
         $query->andFilterWhere(['like', 'description', $this->description])
             //->andFilterWhere(['like', 'type', $this->type])
-            ->andFilterWhere(['like', 'description_done', $this->description_done]);
-
+            ->andFilterWhere(['like', 'description_done', $this->description_done])
+            ->andFilterWhere(['>=', 'created_at', $this->created_start ? strtotime($this->created_start . ' 00:00:00') : null])
+            ->andFilterWhere(['<=', 'created_at', $this->created_end ? strtotime($this->created_end . ' 23:59:59') : null])
+            ->andFilterWhere(['>=', 'done_at', $this->done_start ? strtotime($this->done_start . ' 00:00:00') : null])
+            ->andFilterWhere(['<=', 'done_at', $this->done_end ? strtotime($this->done_end . ' 23:59:59') : null]);
         return $dataProvider;
     }
 }

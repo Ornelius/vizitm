@@ -62,7 +62,7 @@ if($viewName === 'work')
             $hasDeuWork,
             $viewName);
     } catch (Exception $e) {
-        print_r($e->getMessage());
+        //print_r($e->getMessage());
     }
 
     echo $content->getContent();

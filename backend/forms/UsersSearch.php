@@ -43,7 +43,7 @@ class UsersSearch extends Model
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search(array $params): ActiveDataProvider
     {
         $query = Users::find();
 

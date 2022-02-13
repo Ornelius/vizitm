@@ -4,6 +4,7 @@
 namespace vizitm\services\request;
 use dynamikaweb\lightgallery\LightGallery;
 use Exception;
+use kartik\daterange\DateRangePicker;
 use vizitm\entities\request\Photo;
 use vizitm\entities\Users;
 use vizitm\helpers\AddressHelper;
@@ -107,7 +108,21 @@ class RequestViewManage
                     'headerOptions'     => ['style' => 'width:10vh;vertical-align: middle;'],
                     'label' => 'Дата создания',
                     'format' => 'datetime',
-                    'filter' => false,
+                    'filter' => DateRangePicker::widget([
+                        'model' => $searchModel,
+                        'attribute'=>'created_range',
+                        'convertFormat'=>true,
+                        'startAttribute'=>'created_start',
+                        'endAttribute'=>'created_end',
+                        'pluginOptions'=>[
+                            'locale'=>[
+                                'format'=>'Y-m-d',
+                                'ru-Ru',
+                                //'separator'=>'-',
+                            ],
+                            'opens'=>'left'
+                        ]
+                    ]) ,
 
                 ],
                 [
@@ -152,6 +167,22 @@ class RequestViewManage
                     'label'             => 'Дата исполнения',
                     'format' => 'datetime',
                     'visible' => $hasDone,
+                    'filter' => DateRangePicker::widget([
+                        'model' => $searchModel,
+                        //'name'=>'date_range_2',
+                        'attribute'=>'done_range',
+                        'convertFormat'=>true,
+                        'startAttribute'=>'done_start',
+                        'endAttribute'=>'done_end',
+                        'pluginOptions'=>[
+                            'locale'=>[
+                                'format'=>'Y-m-d',
+                                'ru-Ru',
+                                //'separator'=>'-',
+                            ],
+                            'opens'=>'left'
+                        ]
+                    ]) ,
 
                 ],
                 [

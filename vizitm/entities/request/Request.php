@@ -103,15 +103,15 @@ class Request extends ActiveRecord
     {
         return [
             'id'                    => '№',
-            'building_id'           => 'Адресс',
+            'building_id'           => 'Адрес',
             'user_id'               => 'Инициатор',
             'description'           => 'Проблема',
-            'created_at'            => 'Created At',
+            'created_at'            => 'Дата создания',
             'type'                  => 'Тип заявки',
             'deleted'               => 'Deleted',
             'deleted_at'            => 'Deleted At',
             'done'                  => 'Done',
-            'done_at'               => 'Done At',
+            'done_at'               => 'Дата выполнения',
             'invoice'               => 'Invoice',
             'invoce_at'             => 'Invoce At',
             'description_done'      => 'Description Done',

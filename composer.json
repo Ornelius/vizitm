@@ -18,15 +18,16 @@
         "dynamikaweb/yii2-lightgallery": "*",
         "ext-http": "*",
         "hail812/yii2-adminlte3": "~1",
-        "kartik-v/yii2-date-range": "dev-master",
-        "kartik-v/yii2-widget-datepicker": "dev-master",
+        "kartik-v/yii2-field-range": "*",
+        "kartik-v/yii2-widgets": "*",
         "php": "~7",
         "phpunit/phpunit": "~8",
         "rmrevin/yii2-fontawesome": "~3.5",
         "yii-dream-team/yii2-upload-behavior": "*",
         "yiidoc/yii2-redactor": "*",
         "yiisoft/yii2": "^2.0.44",
-        "yiisoft/yii2-swiftmailer": "~2"
+        "yiisoft/yii2-swiftmailer": "~2",
+        "kartik-v/yii2-date-range": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -39,9 +40,6 @@
         "codeception/verify": "~0.5.0 || ~1.1.0",
         "symfony/browser-kit": ">=2.7 <=4.2.4",
         "yiisoft/yii2-bootstrap4": "@dev",
-        "kartik-v/yii2-widget-fileinput": "dev-master",
-        "kartik-v/yii2-editors": "@dev",
-        "kartik-v/yii2-tabs-x": "@dev",
         "kartik-v/yii2-icons": "@dev"
     },
     "config": {

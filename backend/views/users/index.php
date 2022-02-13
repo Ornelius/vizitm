@@ -6,7 +6,6 @@ use vizitm\helpers\UserHelper;
 use kartik\daterange\DateRangePicker;
 use vizitm\entities\Users;
 use yii\helpers\Url;
-use yii\bootstrap\Tabs;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\forms\UsersSearch */

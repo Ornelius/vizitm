@@ -90,7 +90,6 @@ class RequestController extends Controller
         return $this->render('work', [
             'searchModel'           => $searchModel,
             'dataProvider'          => $dataProvider,
-            //'request_status'        => $request_status,
         ]);
     }
 
@@ -205,8 +204,7 @@ class RequestController extends Controller
 
         return $this->render('duework', [
             'searchModel'           => $searchModel,
-            'dataProvider'          => $dataProvider,
-            //'request_status'        => $request_status,
+            'dataProvider'          => $dataProvider
         ]);
     }
 
