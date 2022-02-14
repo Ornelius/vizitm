@@ -54,6 +54,7 @@ class RequestController extends Controller
                     'delete'    => ['POST'],
                     'valid'     => ['GET', 'POST'],
                     'direct'    => ['GET', 'POST'],
+                    'new'    => ['GET', 'POST'],
                 ],
 
             ],

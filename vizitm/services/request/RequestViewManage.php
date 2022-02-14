@@ -272,12 +272,15 @@ class RequestViewManage
      */
     private function getRequestItems(Request $request): string
     {
+
         $i=0;
         $items[] = null;
         $hrefvideo = null;
         $hrefpdf = null;
         $due_date = null;
         $title = 'Заявку сформировал: '. Users::getFullName($request->user_id);
+        $itemsOptions[] = null;
+
         if(!$request->photo){
             $items[0] = [
                 'thumb' => '@web/uploads/noimage/noimage.png',
@@ -285,11 +288,13 @@ class RequestViewManage
                 'imgOptions' =>  [
                     'width' => '90px',
                     'title' => $title,
+                    'style' => 'border-radius: 10px; border: 0.5px #ccc solid; box-shadow: 0 0 8px #444;',
                     'alt' => 'No Image',
                 ],
             ];
 
         } else {
+
             foreach ($request->photo as $photo)
             {
                 $text = 'Выявленная проблема';
@@ -302,11 +307,13 @@ class RequestViewManage
                     $text = 'Результат';
                 }
 
+
                 if ($i === 0) {
                     $width = '90px';
-                    $style = '';
+                    $style = 'border-radius: 10px; border: 0.5px #ccc solid; box-shadow: 0 0 8px #444;';
                     $high = '';
                 }
+                $itemsOptions[$i] = ['tag' => null];
                 $imageOption[$i]= [
                     ///'tag'   => 'div',
                     'width' => $width,
@@ -314,15 +321,18 @@ class RequestViewManage
                     'alt'   => $request->building->address . ' ' . RequestHelper::roomName($request->room) . ' - ' . $text,
                     'style' => $style,
                     'title' => $title,
-                    //'data-video' => '{source:[{src:"/uploads/request/origion/9/2.mp4", type:"video/mp4"}], attributes:{playsinline:true, controls:true}}',
                 ];
+
                 if($photo->sort === Photo::TYPE_VIDEO){
                     $hrefvideo = Html::a(
                         '<i class="far fa-file-video" style="font-size:24px; margin: 1px; padding: 1px;"></i>',
                         $photo->getImageFileUrl('path','/uploads/noimage/video.png'),
                         ['target' => "_blank", 'data-pjax' => 0,]
                     );
+
                     $thumb = '@web/uploads/noimage/video.png';
+
+                    $itemsOptions[$i] = ['tag' => 'div', 'data-video' => '{"source":[{"src":"'. $photo->getImageFileUrl('path','/uploads/noimage/video.png') . '", "type":"video/mp4"}], "attributes":{"playsinline":true, "controls":true}}',];
                 } elseif ($photo->sort === Photo::TYPE_PDF) {
                     $hrefpdf = Html::a(
                         '<i class="far fa-file-pdf" style="font-size:24px; margin: 1px; padding: 1px;"></i>',
@@ -330,8 +340,10 @@ class RequestViewManage
                         ['target' => "_blank", 'data-pjax' => 0,]
                     );
                     $thumb = '@web/uploads/noimage/pdf.png';
+                    $itemsOptions[$i] = ['tag' => null];
                 } else {
                     $thumb = $photo->getThumbFileUrl('path', 'thumb', '/uploads/noimage/noimage.png');
+                    $itemsOptions[$i] = ['tag' => null];
                 }
 
                 $items[$i] = [
@@ -346,45 +358,29 @@ class RequestViewManage
             } //end foreach
         }
 
-/*        if($request->status === Request::STATUS_DUE) {
-            $due_date = '<i class="fas fa fa-calendar"></i>  <i>&nbsp' . Yii::$app->formatter->asDate($request->due_date) . '</i>';
-            if($request->due_date <= (time()+(4*60*60)))
-                $due_date = '<i class="fas fa fa-calendar" style="color: crimson"></i>  <i>&nbsp' . Yii::$app->formatter->asDate($request->due_date)  . ' </i>';
-        } elseif ($request->status === Request::STATUS_DUE_WORK) {
-            $due_date = '<i class="fas fa-exclamation-circle" style="color: crimson"></i><i> &nbsp' . Yii::$app->formatter->asDate($request->due_date) . '</i>';
-            if($request->due_date >= (time()+(4*60*60)) && $request->done_at <= $request->due_date )
-                $due_date = '<i class="fas fa-exclamation-circle" ></i> <i> &nbsp' . Yii::$app->formatter->asDate($request->due_date) . '</i>';
-        } elseif ($request->status === Request::STATUS_DUE_WORK) date("Y-m-d H:i:s",$request->due_date)*/
 
         if(!empty($request->due_date))
         {
-            $style='"color: crimson"';
+            $style='"color: crimson; border-radius: 10px;"';
             if($request->due_date >= (time()+(4*60*60)) && $request->done_at <= $request->due_date)
                 $style='';
             if(($request->status === Request::STATUS_DONE) && ($request->done_at <= $request->due_date))
                 $style='';
             $due_date = '<i class="fas fa fa-calendar" style=' . $style . '></i><i>&nbsp' . Yii::$app->formatter->asDate($request->due_date) . '</i>';
         }
-
+        //$add = array(['tag' => null], ['tag' => null, 'data-video' => '234234234'], ['tag' => 'div', 'data-video' => '{"source": [{"src":"/uploads/request/origion/5/3.mp4", "type":"video/mp4"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}']);
         return
             '<div class="d-flex flex-row">'.
             //'<div style="display: -webkit-flex; display: flex; flex-direction: row;flex-wrap: nowrap;justify-content: flex-start">' .
             '<div class="d-flex align-items-center">' .
             //style="width:12%; margin: 4px; height: 22%; padding: 4px;
-            //'<div data-video= "{source: {src:"/uploads/request/origion/9/2.mp4", "type":"video/mp4"}, "attributes": {"preload": none, "controls": true}}", class="btn btn-app" style="width:12%; margin: 3px; height: 22%; padding: 3px;">' . //$span .
+            //'<div data-src= "{source: {src:"/uploads/request/origion/5/3.mp4", "type":"video/mp4"}, "attributes": {"preload": none, "controls": true}}", class="btn btn-app" style="width:12%; margin: 3px; height: 22%; padding: 3px;">' . //$span .
 
             LightGallery::widget([
                 'items' => $items,
+                'itemsOptions' => $itemsOptions,
                 'options' => [
                     //'class' =>  ["d-flex align-items-center"],
-                    //'tag' => 'video',
-                    //'class' => 'item',
-                    //'style' =>['width:12%; margin: 3px; height: 22%; padding: 3px;'],
-                    //'data-src' => "/uploads/bill.pdf",
-                    //'data-iframe'=>"true",
-                    //'src' => '/uploads/request/origion/78/29.mp4',
-                    //'data-src'="https://file-examples-com.github.io/uploads/2017/10/file-sample_150kB.pdf",
-                    //'data-src' => '{source:[{src:"/uploads/request/origion/9/2.mp4", type:"video/mp4"}], attributes:{playsinline:true, controls:true}}',
                 ],
                 'plugins' => [
                     'lgZoom',
@@ -394,25 +390,27 @@ class RequestViewManage
                     'lgHash',
                     'lgPager',
                     'lgRotate',
-                    //'lgShare',
+                    // 'lgShare',
                     'lgThumbnail',
-                    //'lgMediumZoom'
+                    // 'lgMediumZoom'
                 ],
                 'pluginOptions' => [
                     'licenseKey' => '1B546F35-ACDD4F47-B8915F40-2620D382',
-                    'download' => false,
-                    'zoom' => true,
-                    'share' => false,
-                    'thumbnail' => true,
-                    'allowMediaOverlap' => true,
-                    'videojs' => true,
-                    //'videojsOptions' => [
-                    //    'muted' => true,
-                    //],
-                    'zoomPluginStrings' => ['scale' => 2,'enableZoomAfter' => 300 ],
+                      'download' => false,
+                    //'zoom' => true,
+                      'share' => false,
+                      'thumbnail' => true,
+                      'allowMediaOverlap' => true,
+                    'videjs' => true,
+                    'videojsOptions' => [
+                        'muted' => false,
+                        //'data-src' => '{"source": [{"src":"/uploads/request/origion/5/3.mp4", "type":"video/mp4"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}'
+                    ],
+                    //'zoomPluginStrings' => ['scale' => 2,'enableZoomAfter' => 300 ],
 
-                    'data-iframe' => true,
-                    //'html' => '<video class="lg-video-object lg-html5" controls="controls" preload="none" autostart="false" autoplay=""><source src="[(${video.link})]" type="video/mp4">Your browser does not support HTML5 video</video>',
+                    //'data-iframe' => true,
+                    //'data-video'='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "tracks": [{"src": "{/videos/title.txt", "kind":"captions", "srclang": "en", "label": "English", "default": "true"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}'
+                    //'html' => '<video class="lg-video-object lg-html5" controls="controls" preload="none" autostart="false" autoplay=""><source data-video="[(/uploads/request/origion/5/3.mp4)]" type="video/mp4">Your browser does not support HTML5 video</video>',
                     //'autoplayVideoOnSlide' => true
                 ],
 

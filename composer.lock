@@ -54,7 +54,7 @@
             "version": "3.3.11",
             "source": {
                 "type": "git",
-                "url": "git@github.com:RobinHerbots/Inputmask.git",
+                "url": "https://github.com/RobinHerbots/Inputmask.git",
                 "reference": "5e670ad62f50c738388d4dcec78d2888505ad77b"
             },
             "dist": {
@@ -75,7 +75,7 @@
             "version": "3.6.0",
             "source": {
                 "type": "git",
-                "url": "git@github.com:jquery/jquery-dist.git",
+                "url": "https://github.com/jquery/jquery-dist.git",
                 "reference": "e786e3d9707ffd9b0dd330ca135b66344dcef85a"
             },
             "dist": {
@@ -1181,16 +1181,16 @@
         },
         {
             "name": "kartik-v/yii2-widget-activeform",
-            "version": "v1.6.0",
+            "version": "v1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-widget-activeform.git",
-                "reference": "d54f986737d4c2b309bc72760f5aa55f78286e0e"
+                "reference": "c2f60855af6ca9e66e25380e7ce746b50e504a33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-widget-activeform/zipball/d54f986737d4c2b309bc72760f5aa55f78286e0e",
-                "reference": "d54f986737d4c2b309bc72760f5aa55f78286e0e",
+                "url": "https://api.github.com/repos/kartik-v/yii2-widget-activeform/zipball/c2f60855af6ca9e66e25380e7ce746b50e504a33",
+                "reference": "c2f60855af6ca9e66e25380e7ce746b50e504a33",
                 "shasum": ""
             },
             "require": {
@@ -1231,7 +1231,7 @@
             ],
             "support": {
                 "issues": "https://github.com/kartik-v/yii2-widget-activeform/issues",
-                "source": "https://github.com/kartik-v/yii2-widget-activeform/tree/v1.6.0"
+                "source": "https://github.com/kartik-v/yii2-widget-activeform/tree/v1.6.1"
             },
             "funding": [
                 {
@@ -1239,7 +1239,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2021-09-01T11:43:26+00:00"
+            "time": "2022-02-13T18:09:01+00:00"
         },
         {
             "name": "kartik-v/yii2-widget-affix",

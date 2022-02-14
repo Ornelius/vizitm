@@ -74,26 +74,28 @@ if($viewName === 'work')
         <div class="modal-dialog modal-md "></div>
     </div>
 
-
     <?php
 
     try {
-        $this->registerJsFile(
-            '@web/js/staffModal.js',
-            ['depends' => [JqueryAsset::class]]);
+       // $this->registerJsFile(
+       //     '@web/js/staffModal.js',
+       //     ['depends' => [JqueryAsset::class]]);
     } catch (InvalidConfigException $e) {
+        print_r('sdfsdf'); die();
     }
     try {
-        $this->registerJsFile(
-            '@web/js/ajaxForm.js',
-            ['depends' => [JqueryAsset::class]]);
+        //$this->registerJsFile(
+       //     '@web/js/ajaxForm.js',
+       //     ['depends' => [JqueryAsset::class]]);
     } catch (InvalidConfigException $e) {
+        print_r('sdfsdf2'); die();
     }
     try {
         $this->registerJsFile(
             '@web/js/flashDelay.js',
             ['depends' => [JqueryAsset::class]]);
     } catch (InvalidConfigException $e) {
+        print_r('sdfsdf3'); die();
     }
 
     ?>

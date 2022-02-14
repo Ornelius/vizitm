@@ -25,6 +25,7 @@ class RequestManageService
 
     public function createRequest(RequestCreateForm $form): Request
     {
+
         if (!$form->building_id) {
             throw new DomainException('Выберите адрес здания!');
         } elseif (!$form->description) {
@@ -61,6 +62,7 @@ class RequestManageService
         $request = $this->repository->get($id);
         $request->done($form->done_description);
         $this->repository->update($request);
+        //print_r('asdfasd'); die();
         $this->saveRequestPhoto($form->photo->files, $request,Photo::PHOTO_OF_PROBLEM_DONE);
         return true;
     }
@@ -82,6 +84,7 @@ class RequestManageService
     private function saveRequestPhoto(array $files, Request $request, $typeOfFile)
     {
 
+
         for ($i=0; $i<=count($files)-1; $i++)
         {
             if(preg_match("/\bvideo\b/i", $files[$i]->type) || preg_match("/\bapplication\b/i",$files[$i]->type)){
@@ -91,10 +94,14 @@ class RequestManageService
             }
 
         }
+
         foreach ($files as $file) {
             if (preg_match("/\bimage\b/i", $file->type)) {
+
                 $photo = $request->addPhoto($file, $request->id, $typeOfFile, Photo::TYPE_IMG);
+                //print_r($photo); die();
                 $this->photoRepository->save($photo);
+
             } elseif (preg_match("/\bvideo\b/i", $file->type)) {
                 $photo = $request->addPhoto($file, $request->id, $typeOfFile, Photo::TYPE_VIDEO);
                 $photo->setThumbsOnSave(false);
