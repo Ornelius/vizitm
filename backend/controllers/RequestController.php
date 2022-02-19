@@ -72,6 +72,7 @@ class RequestController extends Controller
         $searchModel = new SearchRequest();
         $request_status = 1;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $request_status);
+        $dataProvider->pagination->pageSize = 10;
 
         return $this->render('new', [
             'searchModel'       => $searchModel,
@@ -89,7 +90,7 @@ class RequestController extends Controller
         $searchModel = new SearchRequest();
         $request_status= 2;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $request_status);
-
+        $dataProvider->pagination->pageSize = 10;
         return $this->render('work', [
             'searchModel'           => $searchModel,
             'dataProvider'          => $dataProvider,
@@ -144,7 +145,7 @@ class RequestController extends Controller
         $searchModel = new SearchRequest();
         $request_status= 3;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $request_status);
-
+        $dataProvider->pagination->pageSize = 10;
         return $this->render('done', [
             'searchModel'               => $searchModel,
             'dataProvider'              => $dataProvider,

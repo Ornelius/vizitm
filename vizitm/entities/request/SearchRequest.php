@@ -98,9 +98,9 @@ class SearchRequest extends Request
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
+            //'pagination' => [
+            //    'pageSize' => 10,
+            //],
             'sort' => [
                 'defaultOrder' => [
                     'id' => SORT_DESC,
