@@ -2,12 +2,11 @@
 
 use vizitm\entities\Users;
 use vizitm\helpers\UserHelper;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
-use yii\helpers\Url;
+use yii\bootstrap4\ActiveForm;
 
 /* @var $model  */
+/* @var $request_id */
 ?>
 <?php
 $form = ActiveForm::begin([
@@ -28,10 +27,11 @@ $form = ActiveForm::begin([
             <?php
 
                 $user = Users::findUserByID(Yii::$app->user->getId());
-                if($user->position != 3) {
+
+                if($user->position !== Users::POSITION_GL_INGENER) {
                     echo $form->field($model, 'direct_to')->dropDownList([$user->id => $user->lastname],['prompt' => 'Выберите сотрудника']);
                 } else {
-                    echo $form->field($model, 'direct_to')->dropDownList(UserHelper::ListPositionUsers(),['prompt' => 'Выберите сотрудника']);
+                    echo $form->field($model, 'direct_to')->dropDownList(UserHelper::ListAllUsersExeptOne($request_id),['prompt' => 'Выберите сотрудника']);
                 }
 
 

@@ -68,6 +68,10 @@ class Photo extends ActiveRecord
             'type'          => 'Type',
         ];
     }
+    public function setThumbsOnSave(bool $bool): void
+    {
+        $this->createThumbsOnSave = $bool;
+    }
 
     /**
      * Gets query for [[Request]].

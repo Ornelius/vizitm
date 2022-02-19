@@ -99,7 +99,7 @@ class SearchRequest extends Request
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
-                'pageSize' => false,
+                'pageSize' => 10,
             ],
             'sort' => [
                 'defaultOrder' => [

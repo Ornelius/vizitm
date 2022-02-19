@@ -1,15 +1,24 @@
 <?php
 
-/* @var $this \yii\web\View */
+/* @var $this View */
 /* @var $content string */
+/* @var $assetDir string */
 
+use hail812\adminlte3\assets\AdminLteAsset;
+use hail812\adminlte3\assets\FontAwesomeAsset;
+use yii\base\InvalidConfigException;
 use yii\helpers\Html;
+use yii\web\View;
 
-\hail812\adminlte3\assets\FontAwesomeAsset::register($this);
-\hail812\adminlte3\assets\AdminLteAsset::register($this);
-$this->registerCssFile('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback');
-
+FontAwesomeAsset::register($this);
+AdminLteAsset::register($this);
+try {
+    $this->registerCssFile('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback');
+} catch (InvalidConfigException $e) {
+    print $e->getName();
+}
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -34,7 +43,7 @@ $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/admi
     <?= $this->render('sidebar', ['assetDir' => $assetDir]) ?>
 
     <!-- Content Wrapper. Contains page content -->
-    <?= $this->render('content', ['content' => $content, 'assetDir' => $assetDir]) ?>
+    <?= $this->render('content', ['content' => $content]) ?>
     <!-- /.content-wrapper -->
 
     <!-- Control Sidebar -->

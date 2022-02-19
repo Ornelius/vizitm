@@ -10,17 +10,20 @@ use vizitm\forms\manage\request\RequestUpdateForm;
 use vizitm\forms\manage\request\StaffForm;
 use vizitm\repositories\PhotoRepository;
 use vizitm\repositories\RequestRepository;
+use vizitm\repositories\VideoRepository;
 use Yii;
 
 class RequestManageService
 {
     private ?RequestRepository      $repository;
     private ?PhotoRepository        $photoRepository;
+    private ?VideoRepository        $videoRepository;
 
-    public function __construct(RequestRepository $repository, PhotoRepository $photoRepository)
+    public function __construct(RequestRepository $repository, PhotoRepository $photoRepository, VideoRepository  $videoRepository)
     {
         $this->repository = $repository;
         $this->photoRepository = $photoRepository;
+        $this->videoRepository = $videoRepository;
     }
 
     public function createRequest(RequestCreateForm $form): Request
@@ -99,7 +102,7 @@ class RequestManageService
             if (preg_match("/\bimage\b/i", $file->type)) {
 
                 $photo = $request->addPhoto($file, $request->id, $typeOfFile, Photo::TYPE_IMG);
-                //print_r($photo); die();
+                ///////print_r('$photo'); die();
                 $this->photoRepository->save($photo);
 
             } elseif (preg_match("/\bvideo\b/i", $file->type)) {

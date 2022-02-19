@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "de6bab567b0ebcfc54ffb46f79372241",
+    "content-hash": "694130e233c09ff0cb979ce4a4ed19b6",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -2430,10 +2430,10 @@
         },
         {
             "name": "npm-asset/lightgallery",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/lightgallery/-/lightgallery-2.3.0.tgz"
+                "url": "https://registry.npmjs.org/lightgallery/-/lightgallery-2.4.0.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -7885,7 +7885,7 @@
     "prefer-lowest": false,
     "platform": {
         "ext-http": "*",
-        "php": "~7"
+        "php": "~7.4"
     },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"

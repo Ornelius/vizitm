@@ -1,7 +1,9 @@
 <?php
+/* @var $assetDir string */
 
 use hail812\adminlte\widgets\Menu;
 use vizitm\entities\Users;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
 ?>
@@ -14,10 +16,12 @@ use yii\helpers\Url;
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="<?=$assetDir?>/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                <img src="<?=Html::encode($assetDir)?>/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block"><?= Yii::$app->getUser()->identity->lastname . " " . Yii::$app->getUser()->identity->name ?></a>
+                <a href="#" class="d-block"><?= Html::encode(Yii::$app->getUser()->identity->lastname) . " " . Html::encode(Yii::$app->getUser()->identity->name)
+
+                    ?></a>
             </div>
         </div>
 

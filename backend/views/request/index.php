@@ -77,25 +77,26 @@ if($viewName === 'work')
     <?php
 
     try {
-       // $this->registerJsFile(
-       //     '@web/js/staffModal.js',
-       //     ['depends' => [JqueryAsset::class]]);
+        $this->registerJsFile(
+            '@web/js/ajaxForm.js',
+            ['depends' => [JqueryAsset::class]]);
+
     } catch (InvalidConfigException $e) {
-        print_r('sdfsdf'); die();
+        throw new \yii\db\Exception($e);
     }
     try {
-        //$this->registerJsFile(
-       //     '@web/js/ajaxForm.js',
-       //     ['depends' => [JqueryAsset::class]]);
+        $this->registerJsFile(
+            '@web/js/staffModal.js',
+            ['depends' => [JqueryAsset::class]]);
     } catch (InvalidConfigException $e) {
-        print_r('sdfsdf2'); die();
+        throw new \yii\db\Exception($e);
     }
     try {
         $this->registerJsFile(
             '@web/js/flashDelay.js',
             ['depends' => [JqueryAsset::class]]);
     } catch (InvalidConfigException $e) {
-        print_r('sdfsdf3'); die();
+        throw new \yii\db\Exception($e);
     }
 
     ?>

@@ -20,7 +20,7 @@
         "hail812/yii2-adminlte3": "~1",
         "kartik-v/yii2-field-range": "*",
         "kartik-v/yii2-widgets": "*",
-        "php": "~7",
+        "php": "~7.4",
         "phpunit/phpunit": "~8",
         "rmrevin/yii2-fontawesome": "~3.5",
         "yii-dream-team/yii2-upload-behavior": "*",

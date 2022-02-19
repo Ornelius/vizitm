@@ -14,7 +14,8 @@ class RequestHelper
             1           => 'Оборудование',
             2           => 'Работы',
             3           => 'Житель',
-            4           => 'Офис'
+            4           => 'Офис',
+            5           => 'Заказ. поз'
         ];
     }
     public static function typeRequestMnemonicList(): array
@@ -23,7 +24,8 @@ class RequestHelper
             1           => '<i class="fas fa-cogs fa-lg"></i>',
             2           => '<i class="fas fa-wrench fa-lg"></i>',
             3           => '<i class="fas fa-male fa-lg"></i>',
-            4           => '<i class="fas fa-user-tie fa-lg"></i>'
+            4           => '<i class="fas fa-user-tie fa-lg"></i>',
+            5           => '<i class="fas fa-truck" aria-hidden="true"></i>'
         ];
     }
     public static function typeRequestListName(int $type): ?string

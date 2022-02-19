@@ -19,7 +19,8 @@ use yii\web\Response;
 
 ///header ("Access-Control-Allow-Origin: *");
 /**
- * RequestController implements the CRUD actions for Request model.
+ * Class RequestController implements the CRUD actions for Request model.
+ *
  */
 class RequestController extends Controller
 {
@@ -54,7 +55,8 @@ class RequestController extends Controller
                     'delete'    => ['POST'],
                     'valid'     => ['GET', 'POST'],
                     'direct'    => ['GET', 'POST'],
-                    'new'    => ['GET', 'POST'],
+                    'new'       => ['GET', 'POST'],
+                    'create'    => ['GET', 'POST'],
                 ],
 
             ],
@@ -241,7 +243,7 @@ class RequestController extends Controller
                 try {
                     //print_r(date('Y-m-d H:i:s', $form->due_date )); die();
                     $this->service->createRequest($form);
-                    return $this->redirect('new');
+                    return $this->redirect(['request/new']);
                 } catch (DomainException $e) {
                     Yii::$app->errorHandler->logException($e);
                     Yii::$app->session->setFlash('error', $e->getMessage());
@@ -268,7 +270,7 @@ class RequestController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['request/view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -292,7 +294,7 @@ class RequestController extends Controller
             $model->save();
             Yii::$app->getSession()->setFlash('success', 'Заявка №' . $model->id . ' Удалена!' );
 
-        return $this->redirect([$viewName]);
+        return $this->redirect(['request/' . $viewName]);
     }
 
     /**

@@ -1,9 +1,9 @@
 $(document).on('beforeSubmit', "#staff", function (event) {
         event.preventDefault(); // avoid to execute the actual submit of the form.
 
-        var form = $(this);
-        var data = form.serialize();
-        var url = form.attr('action');
+        let form = $(this);
+        let data = form.serialize();
+        let url = form.attr('action');
 
        //console.log(url);
            /*$.ajaxSetup({
@@ -20,22 +20,22 @@ $(document).on('beforeSubmit', "#staff", function (event) {
             url: url,
             dataType: 'json',
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            //cache: false,
+            cache: false,
             //processData: false,
             data: data,
             type: 'POST',
-/*            headers: {
+            headers: {
                 'X-CSRFToken': $("meta[name='csrf-token']").attr('content')
-            },*/
+            },
             //_csrfna
             //_csrf: $("meta[name='csrf-token']").attr('content'),
-            beforeSend: function(){
-                //console.log(request);
+            beforeSend: function(request){
+                //console.log(data);
                 //return request.setRequestHeader('X-CSRF-Token', $("meta[name='csrf-token']").attr('content'));
             },
             success: function(success){
 
-               console.log('success: ' + success);
+               //console.log('success: ' + success);
                 $('#addStaffFormModel').modal('hide');
                 //console.log(res);
                 //$('#addStaffFormModel').modal('hide');
@@ -43,12 +43,12 @@ $(document).on('beforeSubmit', "#staff", function (event) {
             complete: function() {
             },
             error: function (error) {
-               var str = "";
-                for(k in error) {
+                let str = "";
+                for(let k in error) {
                     str += k+": "+ error[k]+"\r\n";
                 }
 
-                console.log('error: ' + str);
+                //console.log('error: ' + str);
                 //toastr.warning("","There may a error on uploading. Try again later");
             }
 

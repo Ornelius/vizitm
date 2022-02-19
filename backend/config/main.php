@@ -56,10 +56,10 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                //'<controller:\w+>/<id:\d+>' => '<controller>/view',
+                //'<controller:\w+>/<id:\d+>' => '<controller>/<view>',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
-                //'' => 'request/new', //site/index
+                '' => 'request/new', //site/index
                 '<_a:login|logout>' => 'auth/<_a>',
             ],
         ],

@@ -196,7 +196,7 @@ class RequestViewManage
                     'class' => 'yii\grid\ActionColumn',
                     'headerOptions'     => ['style' => 'width:1vh; vertical-align: middle;'],
                     'contentOptions'    => ['style'=>'vertical-align: middle;'],
-                    'template' => '{delete} {staff} {done}', //{view} {update}
+                    'template' => '{delete} {staff} {done}', //{update} {view}
                     'visible' => $this->statusOfButton,
                     'visibleButtons'=> [
                         'delete'=> function(Request $request): bool { //Кнопка delete отображается у того кто создал заявку или у инженера
@@ -288,7 +288,7 @@ class RequestViewManage
                 'imgOptions' =>  [
                     'width' => '90px',
                     'title' => $title,
-                    'style' => 'border-radius: 10px; border: 0.5px #ccc solid; box-shadow: 0 0 8px #444;',
+                    'style' => 'border-radius: 10px; ',//'border-radius: 10px; border: 0.1px #ccc solid; box-shadow: 0 0 4px #444;',
                     'alt' => 'No Image',
                 ],
             ];
@@ -310,7 +310,7 @@ class RequestViewManage
 
                 if ($i === 0) {
                     $width = '90px';
-                    $style = 'border-radius: 10px; border: 0.5px #ccc solid; box-shadow: 0 0 8px #444;';
+                    $style = 'border-radius: 10px;';//'border-radius: 10px; border: 0.1px #ccc solid; box-shadow: 0 0 3px #444;';
                     $high = '';
                 }
                 $itemsOptions[$i] = ['tag' => null];
@@ -324,23 +324,13 @@ class RequestViewManage
                 ];
 
                 if($photo->sort === Photo::TYPE_VIDEO){
-                    $hrefvideo = Html::a(
-                        '<i class="far fa-file-video" style="font-size:24px; margin: 1px; padding: 1px;"></i>',
-                        $photo->getImageFileUrl('path','/uploads/noimage/video.png'),
-                        ['target' => "_blank", 'data-pjax' => 0,]
-                    );
-
+                    $hrefvideo = '<i class="far fa-file-video" style="font-size:18px; margin: 1px; padding: 1px;"></i>';
                     $thumb = '@web/uploads/noimage/video.png';
-
-                    $itemsOptions[$i] = ['tag' => 'div', 'data-video' => '{"source":[{"src":"'. $photo->getImageFileUrl('path','/uploads/noimage/video.png') . '", "type":"video/mp4"}], "attributes":{"playsinline":true, "controls":true}}',];
+                    $itemsOptions[$i] = ['tag' => 'div', 'class'=>'item', 'data-video' => '{"source":[{"src":"'. $photo->getImageFileUrl('path','/uploads/noimage/video.png') . '", "type":"video/mp4"}], "attributes":{"playsinline":true, "controls":true}}',];
                 } elseif ($photo->sort === Photo::TYPE_PDF) {
-                    $hrefpdf = Html::a(
-                        '<i class="far fa-file-pdf" style="font-size:24px; margin: 1px; padding: 1px;"></i>',
-                        $photo->getImageFileUrl('path','/uploads/noimage/noimage.png'),
-                        ['target' => "_blank", 'data-pjax' => 0,]
-                    );
+                    $hrefpdf = '<i class="far fa-file-pdf" style="font-size:18px; margin: 1px; padding: 1px;"></i>';
                     $thumb = '@web/uploads/noimage/pdf.png';
-                    $itemsOptions[$i] = ['tag' => null];
+                    $itemsOptions[$i] = ['tag' => 'div', 'src' => $photo->getImageFileUrl('path',$thumb), 'data-iframe' => 'true', 'class'=>'item'];
                 } else {
                     $thumb = $photo->getThumbFileUrl('path', 'thumb', '/uploads/noimage/noimage.png');
                     $itemsOptions[$i] = ['tag' => null];
@@ -380,13 +370,14 @@ class RequestViewManage
                 'items' => $items,
                 'itemsOptions' => $itemsOptions,
                 'options' => [
+                    'mode' => 'lg-zoom-out'
                     //'class' =>  ["d-flex align-items-center"],
                 ],
                 'plugins' => [
                     'lgZoom',
                     'lgVideo',
-                    'lgComment',
-                    // 'lgFullscreen' ,
+                    //'lgComment',
+                    //'lgFullscreen' ,
                     'lgHash',
                     'lgPager',
                     'lgRotate',
@@ -397,10 +388,10 @@ class RequestViewManage
                 'pluginOptions' => [
                     'licenseKey' => '1B546F35-ACDD4F47-B8915F40-2620D382',
                       'download' => false,
-                    //'zoom' => true,
+                    'zoom' => true,
                       'share' => false,
                       'thumbnail' => true,
-                      'allowMediaOverlap' => true,
+                      //'allowMediaOverlap' => true,
                     'videjs' => true,
                     'videojsOptions' => [
                         'muted' => false,
@@ -414,7 +405,7 @@ class RequestViewManage
                     //'autoplayVideoOnSlide' => true
                 ],
 
-            ]) . '</div>' .'<div class="d-flex align-items-center flex-column" style="width:5%;margin: 6px; padding: 6px;">' . $hrefvideo . $hrefpdf .
+            ]) . '</div>' .'<div class="d-flex align-items-center flex-column" style="width:5%;margin: 6px; padding: 6px;">' . $hrefvideo . '<p>'.$hrefpdf.'</p>' .
 
             '</div>
                             <div class="ml-auto d-flex align-items-center" style="margin: 3px; padding: 3px;" >' . StringHelper::truncate($request->description, 250) .'</div>
