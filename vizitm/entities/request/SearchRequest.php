@@ -49,7 +49,7 @@ class SearchRequest extends Request
      * @param int $status
      * @return ActiveDataProvider
      */
-    public function search(array $params, int $status)
+    public function search(array $params, int $status): ActiveDataProvider
     {
         $position = Users::findUserByID(Yii::$app->user->getId())->position;
 

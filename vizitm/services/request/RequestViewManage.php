@@ -408,7 +408,7 @@ class RequestViewManage
             ]) . '</div>' .'<div class="d-flex align-items-center flex-column" style="width:5%;margin: 6px; padding: 6px;">' . $hrefvideo . '<p>'.$hrefpdf.'</p>' .
 
             '</div>
-                            <div class="ml-auto d-flex align-items-center" style="margin: 3px; padding: 3px;" >' . StringHelper::truncate($request->description, 250) .'</div>
+                            <div class="ml-auto d-flex align-items-center" style="margin: 3px; padding: 3px;" >' . StringHelper::truncate($request->description, 252) .'</div>
                   </div><div class="d-flex flex-row"><div class="ml-auto d-flex align-items-center" style="font-size-adjust: inherit">'. $due_date .'</div></div>' ;
 
     }
