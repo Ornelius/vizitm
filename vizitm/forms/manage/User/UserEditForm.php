@@ -9,15 +9,16 @@ use yii\helpers\ArrayHelper;
 
 class UserEditForm extends Model
 {
-    public $id;
-    public $username;
-    public $email;
-    public $status;
-    public $password;
-    public $_user;
+    public ?int         $id         = null;
+    public ?string      $username   = null;
+    public ?string      $email      = null;
+    public ?int         $status     = null;
+    public ?string      $password   = null;
+    public Users        $_user;
 
     public function __construct(Users $user, $config = [])
     {
+        //$this->id       = $user->id;
         $this->username = $user->username;
         $this->email = $user->email;
         //$roles = Yii::$app->authManager->getRolesByUser($user->id);

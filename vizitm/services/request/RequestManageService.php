@@ -6,12 +6,14 @@ use vizitm\entities\request\Request;
 use vizitm\entities\building\Building;
 use vizitm\entities\Users;
 use vizitm\forms\manage\request\RequestCreateForm;
+use vizitm\forms\manage\request\RequestEditForm;
 use vizitm\forms\manage\request\RequestUpdateForm;
 use vizitm\forms\manage\request\StaffForm;
 use vizitm\repositories\PhotoRepository;
 use vizitm\repositories\RequestRepository;
 use vizitm\repositories\VideoRepository;
 use Yii;
+use yii\db\StaleObjectException;
 
 class RequestManageService
 {
@@ -60,6 +62,21 @@ class RequestManageService
 
     }
 
+    /**
+     * @throws StaleObjectException
+     */
+    public function edit(RequestEditForm $form, int $id): bool
+    {
+        $request = $this->repository->get($id);
+        $request->edit($form);
+        //print_r($request ); die();
+        $this->repository->save($request);
+        return true;
+    }
+
+    /**
+     * @throws StaleObjectException
+     */
     public function requestDone(RequestUpdateForm $form, int $id): bool
     {
         $request = $this->repository->get($id);

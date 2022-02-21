@@ -15,6 +15,7 @@ use vizitm\entities\Users;
 use vizitm\services\request\RequestViewManage;
 use yii\base\InvalidConfigException;
 use yii\bootstrap4\LinkPager;
+use yii\data\Pagination;
 use yii\web\JqueryAsset;
 use yii\widgets\Pjax;
 

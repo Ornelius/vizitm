@@ -21,7 +21,7 @@ $(document).on('beforeSubmit', "#staff", function (event) {
             dataType: 'json',
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
             cache: false,
-            //processData: false,
+            processData: false,
             data: data,
             type: 'POST',
             headers: {

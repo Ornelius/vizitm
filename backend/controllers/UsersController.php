@@ -8,6 +8,7 @@ use vizitm\services\manage\UserManageService;
 use Yii;
 use vizitm\entities\Users;
 use backend\forms\UsersSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -20,6 +21,7 @@ use yii\web\Response;
 class UsersController extends Controller
 {
     private UserManageService $service;
+    public bool $bool = false;
 
     public function __construct(
         $id,
@@ -29,6 +31,9 @@ class UsersController extends Controller
     {
         parent::__construct($id, $module, $config);
         $this->service = $service;
+        $position = Users::findUserByID(Yii::$app->user->getId())->position;
+        if($position === Users::POSITION_ADMINISTRATOR)
+            $this->bool = true;
     }
 
 
@@ -44,14 +49,27 @@ class UsersController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::class,
+                'except' => ['error', 'login', 'logout'],
+                'only' => ['index'],
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'update', 'delete'],
+                        'roles' => ['@'],
+                        //'ips' => ['192.168.3.5'],
+                        'allow' => $this->bool,
+                    ]
+                ],
+            ],
         ];
     }
 
     /**
      * Lists all Users models.
-     * @return mixed
+     * @return string
      */
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $searchModel = new UsersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -65,10 +83,10 @@ class UsersController extends Controller
     /**
      * Displays a single Users model.
      * @param integer $id
-     * @return mixed
+     * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView(int $id)
+    public function actionView(int $id): string
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -78,7 +96,7 @@ class UsersController extends Controller
     /**
      * Creates a new Users model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
+     * @return Response|string
      */
     public function actionCreate()
     {
@@ -102,7 +120,7 @@ class UsersController extends Controller
      * Updates an existing Users model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
-     * @return mixed
+     * @return Response|string
      * @throws NotFoundHttpException if the model cannot be found
      */
 
@@ -113,7 +131,6 @@ class UsersController extends Controller
         $form = new UserEditForm($user);
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-            //print_r(Yii::$app->request->post()); die();
             try{
                 $this->service->edit($user->id, $form);
                 return $this->redirect(['view', 'id' => $user->id]);
@@ -136,10 +153,9 @@ class UsersController extends Controller
      * Deletes an existing Users model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @return Response
      */
-    public function actionDelete(int $id)
+    public function actionDelete(int $id): Response
     {
         $this->service->deleteUser($id);
         return $this->redirect(['index']);
@@ -156,14 +172,14 @@ class UsersController extends Controller
         return $this->redirect(['index']);
     }
 
+    /**
+     * @throws NotFoundHttpException
+     */
     protected function findModel(int $id): ?Users
     {
         if (($model = Users::findOne($id)) !== null) {
             return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
-
-
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

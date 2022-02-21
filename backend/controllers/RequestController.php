@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use DomainException;
 use vizitm\entities\request\SearchRequest;
+use vizitm\forms\manage\request\RequestEditForm;
 use vizitm\forms\manage\request\RequestUpdateForm;
 use vizitm\forms\manage\request\StaffForm;
 use vizitm\services\request\DirectService;
@@ -12,12 +13,15 @@ use vizitm\forms\manage\request\RequestCreateForm;
 use Yii;
 use vizitm\entities\request\Request;
 use yii\bootstrap4\ActiveForm;
+use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
+use yii\debug\models\timeline\DataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
 
-///header ("Access-Control-Allow-Origin: *");
+header ("Access-Control-Allow-Origin: *");
 /**
  * Class RequestController implements the CRUD actions for Request model.
  *
@@ -42,7 +46,7 @@ class RequestController extends Controller
 
 
     /**
-     * {@inheritdoc}
+     * {}
      */
     public function behaviors(): array
     {
@@ -57,6 +61,7 @@ class RequestController extends Controller
                     'direct'    => ['GET', 'POST'],
                     'new'       => ['GET', 'POST'],
                     'create'    => ['GET', 'POST'],
+                    'update'    => ['GET', 'POST'],
                 ],
 
             ],
@@ -65,19 +70,17 @@ class RequestController extends Controller
 
     /**
      * Lists all Request models.
-     * @return mixed
+     * @return string
      */
     public function actionNew(): string
     {
         $searchModel = new SearchRequest();
         $request_status = 1;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $request_status);
-        $dataProvider->pagination->pageSize = 10;
 
         return $this->render('new', [
             'searchModel'       => $searchModel,
             'dataProvider'      => $dataProvider,
-            //'request_status'    => $request_status,
         ]);
     }
 
@@ -85,12 +88,12 @@ class RequestController extends Controller
      * Lists all Request models.
      * @return string
      */
-    public function actionWork()
+    public function actionWork(): string
     {
         $searchModel = new SearchRequest();
         $request_status= 2;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $request_status);
-        $dataProvider->pagination->pageSize = 10;
+
         return $this->render('work', [
             'searchModel'           => $searchModel,
             'dataProvider'          => $dataProvider,
@@ -106,7 +109,7 @@ class RequestController extends Controller
         //$this->enableCsrfValidation = false;
         $form = new StaffForm();
         $post = Yii::$app->request->post();
-        $del_id = Request::find()->where(['id'=>$id])->one()->work_whom;
+        $del_user_from_menu_id = Request::find()->where(['id'=>$id])->one()->work_whom;
 
         if ($form->load($post) && $form->validate()) {
             $this->service->requestWork($id, $form);
@@ -118,7 +121,7 @@ class RequestController extends Controller
 
         return $this->renderAjax('staff', [
             'model'         => $form,
-            'request_id'    => $del_id,
+            'user_id'    => $del_user_from_menu_id,
         ]);
 
     }
@@ -145,7 +148,7 @@ class RequestController extends Controller
         $searchModel = new SearchRequest();
         $request_status= 3;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $request_status);
-        $dataProvider->pagination->pageSize = 10;
+
         return $this->render('done', [
             'searchModel'               => $searchModel,
             'dataProvider'              => $dataProvider,
@@ -160,7 +163,6 @@ class RequestController extends Controller
     {
         $form = new RequestUpdateForm();
         if ($form->load(Yii::$app->request->post())) {
-
             $form->photo->validate();
             $isValid = $form->validate();
 
@@ -222,8 +224,9 @@ class RequestController extends Controller
      */
     public function actionView(int $id): string
     {
+        $request = $this->findModel($id);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $request,
         ]);
     }
 
@@ -265,19 +268,23 @@ class RequestController extends Controller
      * @param integer $id
      * @return Response|string
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws StaleObjectException
      */
-    public function actionUpdate(int $id)
+    public function actionUpdate(int $id, string $viewName)
     {
-        $model = $this->findModel($id);
+        $request = $this->findModel($id);
+        $form = new RequestEditForm($request);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['request/view', 'id' => $model->id]);
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            $this->service->edit($form, $id);
+            return $this->redirect(['request/' . $viewName]);
         }
 
         return $this->render('update', [
-            'model' => $model,
+            'model' => $form,
         ]);
     }
+
 
     /**
      * Deletes an existing Request model.

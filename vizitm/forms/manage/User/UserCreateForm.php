@@ -4,13 +4,13 @@ use yii\base\Model;
 
 class UserCreateForm extends Model
 {
-    public ?string $username    = null;
-    public ?string $email       = null;
-    public ?string $password    = null;
-    public ?int $status         = null;
-    public ?string $name        = null;
-    public ?string $lastname    = null;
-    public ?string $position    = null;
+    public ?string  $username    = null;
+    public ?string  $email       = null;
+    public ?string  $password    = null;
+    public ?int     $status      = null;
+    public ?string  $name        = null;
+    public ?string  $lastname    = null;
+    public ?string  $position    = null;
 
 
 

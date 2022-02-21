@@ -38,6 +38,13 @@ class UserHelper
     {
         return ArrayHelper::map(Users::find()->where(['status'=>Users::STATUS_ACTIVE])->all(), 'id', 'lastname');
     }
+    public static function ListAllUsersExeptOne(int $id=null): ?array
+    {
+        return ArrayHelper::map(Users::find()->where(['status'=>Users::STATUS_ACTIVE, ])
+            ->andWhere(['not', ['id' => $id]])
+            ->andWhere(['not', ['position' => Users::POSITION_ADMINISTRATOR]])->all(),
+        'id', 'lastname');
+    }
     public static function ListPositionUsers(): ?array
     {
         return ArrayHelper::map(Users::find()->where(['status'=>Users::STATUS_ACTIVE])->where(['position' => [1,2,3,4]])->all(), 'id', 'lastname');

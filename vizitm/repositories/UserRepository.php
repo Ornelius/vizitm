@@ -2,8 +2,10 @@
 
 
 namespace vizitm\repositories;
+use RuntimeException;
 use vizitm\entities\Users;
-use yii\web\NotFoundHttpException;
+use Yii;
+use yii\db\StaleObjectException;
 
 class UserRepository
 {
@@ -12,19 +14,23 @@ class UserRepository
     {
         if(!$user->save()) {
 
-            throw new \RuntimeException('Ошибка сохранения пользователя');
+            throw new RuntimeException('Ошибка сохранения пользователя');
         } else {
-            \Yii::$app->getSession()->setFlash('success', 'Пользователь: ' . $user->username . ' сохранен в БД!');
+            Yii::$app->getSession()->setFlash('success', 'Пользователь: ' . $user->username . ' сохранен в БД!');
         }
     }
+
+    /**
+     * @throws StaleObjectException
+     */
     public function deleteUsers(int $id)
     {
         $user = $this->findById($id);
 
         if(!$user->delete()){
-            throw new \RuntimeException('Ошибка удаления пользователя!');
+            throw new RuntimeException('Ошибка удаления пользователя!');
         } else {
-            \Yii::$app->getSession()->setFlash('success', 'Пользователь: ' . $user->username . ' удален из БД!');
+            Yii::$app->getSession()->setFlash('success', 'Пользователь: ' . $user->username . ' удален из БД!');
         }
     }
     public function findByUsername(string $username)
@@ -49,7 +55,7 @@ class UserRepository
     private function getBy(array $condition)
     {
         $user = Users::find()->andWhere($condition)->limit(1)->one();
-        return $user ? $user : false;
+        return $user ?: false;
     }
 
 

@@ -16,11 +16,13 @@ use yii\widgets\ActiveForm;
 /* @var $model vizitm\entities\request\Request */
 /* @var $photo vizitm\entities\request\Photo */
 /* @var $form yii\widgets\ActiveForm */
+/* @var $update yii\widgets\ActiveForm */
 ?>
 
 <div class="request-form">
 
-    <?php $form = ActiveForm::begin([
+    <?php
+    $form = ActiveForm::begin([
             'options' => [
                     'enctype' => 'multipart/form-data',
                     'layout'=>'vertical',
@@ -32,6 +34,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'building_id')->dropDownList(RequestHelper::addressList(), ['prompt' => 'Выберите адрес объекта недвижимости']) ?>
 
     <?=
+
     //$form->field($model, 'description')->textarea(['rows' => 4, 'cols' => 5, 'maxlength' => true, 'placeholder' => 'Опишите проблему!'])
     $form->field($model, 'description')->widget(Redactor::class, [
         'clientOptions' => [
@@ -51,7 +54,7 @@ use yii\widgets\ActiveForm;
     <?php
 
     $position = Users::findUserByID(Yii::$app->user->getId())->position;
-    if(($position === 3))
+    if(($position === 3) )//&& $update != true)
         try {
             echo $form->field($model, 'due_date')->widget(DatePicker::class, [
                 'value' => date('d.M.Y'),
@@ -62,59 +65,62 @@ use yii\widgets\ActiveForm;
                     //'todayBtn' => true, // выбрать сегодняшнюю дату
                     'todayHighlight' => true, // подсветка сегодняшнего дня
                     'autoclose' => true, //авто закрытие
+                    'locale' => 'Ru-ru',
                 ]
             ]);
         } catch (Exception $e) {
-            throw new NotFoundHttpException($e->getMessage(), 'Не отображает информацию DatePicker');
+            //throw new NotFoundHttpException($e->getMessage(), 'Не отображает информацию DatePicker');
         }
     ?>
 
     <?php
 
-    echo '<br><label>Фото и видео материал!</label>';
 
-    try {
-        echo $form->field($model->photo, 'files[]')->widget(FileInput::class, [
-            //'showMessage' => true,
-            'name' => 'InputFileID',
-            'attribute' => 'InputFileID',
-            'id' => 'fileInputId2',
-            'pluginOptions' => [
-                'id' => 'fileInputId1',
-                'showCaption' => true,
-                'showRemove' => true,
-                'showDelete' => true,
-                'showUpload' => false,
-                'showPreview' => true,
-                'overwriteInitial' => true,
-                'initialPreviewAsData' => true,
-                'removeClass' => 'btn btn-danger',
-                'removeIcon' => '<i class="fas fa-trash"></i> ',
-                //'browseClass' => 'btn btn-success btn-block' ,
-                //'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ' ,
-                'browseLabel' => 'Добавить ФОТО',
-                'allowedFileExtensions' => [
-                    'jpg',
-                    'jpeg',
-                    'gif',
-                    'png',
-                    'pdf',
-                    'mp4',
-                    //'avi'
+    if($update === false) {
+        echo '<br><label>Фото и видео материал!</label>';
+
+        try {
+            echo $form->field($model->photo, 'files[]')->widget(FileInput::class, [
+                //'showMessage' => true,
+                'name' => 'InputFileID',
+                'attribute' => 'InputFileID',
+                'id' => 'fileInputId2',
+                'pluginOptions' => [
+                    'id' => 'fileInputId1',
+                    'showCaption' => true,
+                    'showRemove' => true,
+                    'showDelete' => true,
+                    'showUpload' => false,
+                    'showPreview' => true,
+                    'overwriteInitial' => true,
+                    'initialPreviewAsData' => true,
+                    'removeClass' => 'btn btn-danger',
+                    'removeIcon' => '<i class="fas fa-trash"></i> ',
+                    //'browseClass' => 'btn btn-success btn-block' ,
+                    //'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ' ,
+                    'browseLabel' => 'Добавить ФОТО',
+                    'allowedFileExtensions' => [
+                        'jpg',
+                        'jpeg',
+                        'gif',
+                        'png',
+                        'pdf',
+                        'mp4',
+                        //'avi'
+                    ],
                 ],
-            ],
-            'options' => [
-                'accept' => [
-                    'image/*',
-                    //'video/*'
+                'options' => [
+                    'accept' => [
+                        'image/*',
+                        //'video/*'
+                    ],
+                    'multiple' => true,
                 ],
-                'multiple' => true,
-            ],
-        ]);
-    } catch (Exception $e) {
-        echo $e->getMessage();
+            ]);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
-
     //echo $form->field($photo, 'imageFiles[]')->fileInput(['multiple' => true, 'accept' => 'image/*', 'video/*'])
 
     ?>

@@ -5,6 +5,7 @@ namespace vizitm\repositories;
 use RuntimeException;
 use vizitm\entities\request\Request;
 use Yii;
+use yii\db\StaleObjectException;
 
 class RequestRepository
 {
@@ -14,15 +15,19 @@ class RequestRepository
         {
             throw new RuntimeException('Ошибка сохраниния Заявки!');
         } else {
-            Yii::$app->getSession()->setFlash('success', 'Новая заявка сформирована!');
+            Yii::$app->getSession()->setFlash('success', 'Cформирована новая заявка № ' . $request->id  );
         }
 
     }
+
+    /**
+     * @throws StaleObjectException
+     */
     public function update(Request $request): void
     {
         if(!$request->update())
         {
-            throw new RuntimeException('Ошибка обновления Заявки!');
+            throw new RuntimeException('Ошибка обновления Заявки №' . $request->id);
         } else {
             Yii::$app->getSession()->setFlash('success', 'Заявка №' . $request->id);
         }
@@ -36,7 +41,7 @@ class RequestRepository
     private function getBy(array $condition)
     {
         $request = Request::find()->andWhere($condition)->limit(1)->one();
-        return $request ? $request : false;
+        return $request ?: false;
     }
 
 

@@ -1,8 +1,8 @@
 <?php
 namespace vizitm\entities;
 
-use phpDocumentor\Reflection\Types\Integer;
 use Yii;
+use yii\base\Exception;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -12,19 +12,19 @@ use yii\db\ActiveQuery;
 /**
  * User model
  *
- * @property integer $id
- * @property string $username
- * @property string $password_hash
- * @property string $password_reset_token
- * @property string $verification_token
- * @property string $email
- * @property string $name
- * @property string $lastname
- * @property integer $position
- * @property string $auth_key
- * @property integer $status
- * @property integer $created_at
- * @property integer $updated_at
+ * @property int        $id
+ * @property string     $username
+ * @property string     $password_hash
+ * @property string     $password_reset_token
+ * @property string     $verification_token
+ * @property string     $email
+ * @property string     $name
+ * @property string     $lastname
+ * @property int        $position
+ * @property string     $auth_key
+ * @property int        $status
+ * @property int        $created_at
+ * @property int        $updated_at
  * @property-read ActiveQuery $profile
  * @property-read string $authKey
  * @property string $password write-only password
@@ -114,7 +114,7 @@ class Users extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             TimestampBehavior::class,
@@ -131,6 +131,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     /**
      * {@inheritdoc}
+     * @throws NotSupportedException
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
@@ -148,9 +149,9 @@ class Users extends ActiveRecord implements IdentityInterface
      * Finds user by username
      *
      * @param string $username
-     * @return static|null
+     *
      */
-    public static function findByUsername(string $username): ActiveQuery
+    public static function findByUsername(string $username)
     {
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
@@ -170,7 +171,7 @@ class Users extends ActiveRecord implements IdentityInterface
      * @param string $token password reset token
      * @return static|null
      */
-    public static function findByPasswordResetToken($token)
+    public static function findByPasswordResetToken(string $token): ?Users
     {
         if (!static::isPasswordResetTokenValid($token)) {
             return null;
@@ -188,7 +189,8 @@ class Users extends ActiveRecord implements IdentityInterface
      * @param string $token verify email token
      * @return static|null
      */
-    public static function findByVerificationToken($token) {
+    public static function findByVerificationToken(string $token): ?Users
+    {
         return static::findOne([
             'verification_token' => $token,
             'status' => self::STATUS_INACTIVE
@@ -199,9 +201,9 @@ class Users extends ActiveRecord implements IdentityInterface
      * Finds out if password reset token is valid
      *
      * @param string $token password reset token
-     * @return bool
+     *
      */
-    public static function isPasswordResetTokenValid($token)
+    public static function isPasswordResetTokenValid(string $token)
     {
         if (empty($token)) {
             return false;
@@ -223,7 +225,7 @@ class Users extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function getAuthKey()
+    public function getAuthKey(): ?string
     {
         return $this->auth_key;
     }
@@ -251,6 +253,7 @@ class Users extends ActiveRecord implements IdentityInterface
      * Generates password hash from password and sets it to the model
      *
      * @param string $password
+     * @throws Exception
      */
     public function setPassword($password)
     {
@@ -259,6 +262,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     /**
      * Generates "remember me" authentication key
+     * @throws Exception
      */
     public function generateAuthKey()
     {
@@ -267,6 +271,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     /**
      * Generates new password reset token
+     * @throws Exception
      */
     public function generatePasswordResetToken()
     {
@@ -275,6 +280,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     /**
      * Generates new token for email verification
+     * @throws Exception
      */
     public function generateEmailVerificationToken()
     {

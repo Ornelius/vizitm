@@ -32,6 +32,7 @@ class RequestUpdateForm extends CompositeForm
 
     /**
      * {@inheritdoc}
+     * @var array
      */
     public function rules(): array
     {

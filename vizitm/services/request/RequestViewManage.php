@@ -196,7 +196,7 @@ class RequestViewManage
                     'class' => 'yii\grid\ActionColumn',
                     'headerOptions'     => ['style' => 'width:1vh; vertical-align: middle;'],
                     'contentOptions'    => ['style'=>'vertical-align: middle;'],
-                    'template' => '{delete} {staff} {done}', //{update} {view}
+                    'template' => '{delete} {staff} {done} {update}' , //{update} {view}
                     'visible' => $this->statusOfButton,
                     'visibleButtons'=> [
                         'delete'=> function(Request $request): bool { //Кнопка delete отображается у того кто создал заявку или у инженера
@@ -223,7 +223,9 @@ class RequestViewManage
                             return $boll;
                         },
                         'update'=> function(Request $request): bool {
-                            if($request->status === Request::STATUS_NEW)
+                            if((($request->status === Request::STATUS_NEW || $request->status === Request::STATUS_DUE) && ($request->user_id === $this->userID))
+
+                            )
                                 return true;
                             return false;
                         },
@@ -254,7 +256,13 @@ class RequestViewManage
                         },
                         'done' => function($url, $model, $key) use ($viewName) {     // render your custom button
                             return Html::a('<i class="fas fa-check-square"></i>', Url::toRoute(['request/request-done', 'id' => $key, 'viewName' => $viewName]));
-                        }
+                        },
+                        'update' => function($url, $model, $key) use ($viewName) {
+
+                            return Html::a('<i class="fas fa-pencil-alt"></i>',
+                                [Url::toRoute(['request/update', 'id' => $key, 'viewName' => $viewName])],
+                                );
+                        },
                     ]
                 ]
             ],

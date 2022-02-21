@@ -3,6 +3,8 @@
 namespace vizitm\entities\request;
 use vizitm\entities\Users;
 use vizitm\entities\building\Building;
+use vizitm\forms\manage\request\RequestCreateForm;
+use vizitm\forms\manage\request\RequestEditForm;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use Yii;
@@ -35,7 +37,7 @@ use yii\web\UploadedFile;
  * @property Direct $direct                 Должностные лица кому заявка перенаправлена
  * @property Photo[] $photo                 Фотографии проблемы
  * @property Building $building             Адрес объекта недвижимости
- * @property-read \yii\db\ActiveQuery $video
+ * @property-read ActiveQuery $video
  * @property Users $user
  *
  */
@@ -46,13 +48,27 @@ class Request extends ActiveRecord
     const STATUS_DONE           = 3;
     const STATUS_DUE            = 4;
     const STATUS_DUE_WORK       = 5;
+
     /**
-     * @var int|mixed|null
+     *
+     * @param int $building_id
+     * @param string $description
+     * @param int $type
+     * @param int $room
+     * @param int|null $type_of_work
+     * @param int|null $due_date
+     * @return Request
      */
 
-    public static function create(int $building_id, string $description, int $type, int $room, int $type_of_work = null,
-                                  ///int $importance = null,
-                                  int $due_date = null): self
+    public static function create(
+        int $building_id,
+        string $description,
+        int $type,
+        int $room,
+        int $type_of_work = null,
+        ///int $importance = null,
+        int $due_date = null
+    ): self
     {
         $request = new static();
 
@@ -68,10 +84,9 @@ class Request extends ActiveRecord
         if(!empty($due_date))
             $request->status                = self::STATUS_DUE;
 
-
-
         return $request;
     }
+
     public function done(string $description): void
     {
         $this->description_done = $description;
@@ -79,6 +94,19 @@ class Request extends ActiveRecord
         $this->done             = true;
         $this->status           = self::STATUS_DONE;
     }
+
+    public function edit( RequestEditForm $form): void
+    {
+        $this->building_id                  = $form->building_id;
+        $this->description                  = $form->description;
+        $this->type                         = $form->type;
+        $this->type_of_work                 = $form->type_of_work;
+        $this->room                         = $form->room;
+        //$this->importance                   = $form->importance;
+        //$this->due_date                     = $form->due_date;
+
+    }
+
     public function work(int $staff)
     {
         $this->work_whom        = $staff;

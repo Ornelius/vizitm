@@ -10,7 +10,7 @@ class PhotoCreateForm extends Model
     /**
      * @var UploadedFile[] files
      */
-    public $files;
+    public array $files = [];
 
 
 
