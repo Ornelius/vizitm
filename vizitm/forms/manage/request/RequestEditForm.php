@@ -19,7 +19,7 @@ class RequestEditForm extends Model
     public ?int                 $room           = null;
     //public $importance                   ;
     //public $due_date                     ;
-    public Request $_request ;
+    //public Request $_request ;
 
     public function __construct(Request $request, $config = [])
     {
