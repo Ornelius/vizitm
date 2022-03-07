@@ -59,10 +59,11 @@ class SearchRequest extends Request
                 'status' => ['status' => Request::STATUS_NEW] /** Новая заявка **/
             ]);
         } elseif ($status === Request::STATUS_WORK) { /** Заявка в работе **/
-            if(!(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR)))
+            /*if(!(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR)))
                 $query->andFilterWhere([
-                    'work_whom' => ['work_whom' => Yii::$app->user->getId()] /** Фильтрация заявок по пользователю **/
-                ]);
+                    'work_whom' => ['work_whom' => Yii::$app->user->getId()] /** Фильтрация заявок по пользователю /
+                ]);*/
+
             $query->andFilterWhere([
                 'status' => ['status' => Request::STATUS_WORK] /** Заявка в работе **/
             ]);

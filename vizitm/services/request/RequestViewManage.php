@@ -201,8 +201,8 @@ class RequestViewManage
                     'template' => '{delete} {staff} {done} {update} {view}' , //{update} {view}
                     'visible' => $this->statusOfButton,
                     'visibleButtons'=> [
-                        'delete'=> function(Request $request): bool { //Кнопка delete отображается у того кто создал заявку или у инженера
-                            if(($request->user_id === $this->userID) || ($this->userPosition === Users::POSITION_GL_INGENER))
+                        'delete'=> function(Request $request): bool { //Кнопка delete отображается у того кто создал заявку или у инженера и убрана в готовых заявках
+                            if((($request->user_id === $this->userID) || ($this->userPosition === Users::POSITION_GL_INGENER)) && $request->done == false)
                                 return true;
                             return false;
                         },

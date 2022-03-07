@@ -39,7 +39,7 @@ class RequestUpdateForm extends CompositeForm
         return [
             [['done_description'], 'required'],
             //[['done_description'], 'integer'],
-            [['done_description'], 'string'],
+            [['done_description'], 'string', 'max' => 2500],
         ];
     }
 
