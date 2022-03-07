@@ -222,11 +222,12 @@ class RequestController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView(int $id): string
+    public function actionView(int $id, string $viewName): string
     {
         $request = $this->findModel($id);
         return $this->render('view', [
             'model' => $request,
+            'viewNmae' => $viewName,
         ]);
     }
 

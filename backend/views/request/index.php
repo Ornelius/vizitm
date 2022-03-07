@@ -14,8 +14,6 @@
 use vizitm\entities\Users;
 use vizitm\services\request\RequestViewManage;
 use yii\base\InvalidConfigException;
-use yii\bootstrap4\LinkPager;
-use yii\data\Pagination;
 use yii\web\JqueryAsset;
 use yii\widgets\Pjax;
 
@@ -28,7 +26,7 @@ $position = Users::findUserByID(Yii::$app->user->getId())->position;
 $content = new RequestViewManage();
 if($viewName === 'work')
 {
-    if(($position === 3) || ($position === 6))
+    //if(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR))
         $hasWork = true;
 } elseif ($viewName === 'done')
 {
@@ -68,7 +66,6 @@ if($viewName === 'work')
     }
 
     echo $content->getContent();
-
     Pjax::end();
     ?>
     <!-- POPUP MODAL CONTACT -->
