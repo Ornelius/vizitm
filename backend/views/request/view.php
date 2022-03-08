@@ -39,9 +39,10 @@ $this->params['breadcrumbs'][] =  Html::encode($this->title);
                             <li class="list-group-item">
                                 <b>Тип заявки</b> <a class="float-right">
                                     <?php
+                                        $val = 'Обычная';
                                         if($model->due_date)
-                                            echo Yii::$app->formatter->asDate($model->due_date);
-                                        echo 'Обычная';
+                                            $val = Yii::$app->formatter->asDate($model->due_date);
+                                        echo $val;
                                     ?>
                                 </a>
                             </li>

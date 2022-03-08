@@ -96,7 +96,7 @@ class SearchRequest extends Request
 
 
         // add conditions that should always apply here
-
+        $query->groupBy('id')->orderBy(['id' => SORT_DESC]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'Pagination' => [
@@ -106,12 +106,13 @@ class SearchRequest extends Request
                 'pageSize' => 8,
             ],
 
-            'sort' => [
+            /*'sort' => [
                 'defaultOrder' => [
                     'id' => SORT_DESC,
                 ]
-            ]
+            ]*/
         ]);
+
 
         $this->load($params);
 

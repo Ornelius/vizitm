@@ -60,7 +60,7 @@ class RequestViewManage
         $this->content = GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
-            'summary' => "Показано записей: <b>{count}</b>",
+            'summary' => "Показано записей: <b>{begin} - {end} из {totalCount}</b>",
             'headerRowOptions' => ['style' => 'text-align: center; vertical-align: middle'],
             'rowOptions' => ['style' => 'text-align: center'],
             'options' => [ 'style' => 'table-layout:fixed;' ],
