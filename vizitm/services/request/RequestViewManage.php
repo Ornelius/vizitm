@@ -33,9 +33,10 @@ class RequestViewManage
     }
     public function getPosition(): bool
     {
-        if($this->userPosition !== Users::POSITION_DEGURNI_OPERATOR)
-            return true;
-        return false;
+        if($this->userPosition !== Users::POSITION_DEGURNI_OPERATOR) {
+            return false;
+        }
+        return true;
 
     }
 

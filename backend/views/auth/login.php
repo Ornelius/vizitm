@@ -1,8 +1,10 @@
 <?php
 
 use vizitm\forms\LoginForm;
+use yii\base\InvalidConfigException;
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
+use yii\web\JqueryAsset;
 
 /* @var $this yii\web\View */
 /* @var $form ActiveForm */
@@ -60,6 +62,17 @@ $fieldOptions2 = [
 
 
         <?php ActiveForm::end(); ?>
+        <?php
+
+        try {
+            $this->registerJsFile(
+                '@web/js/flashDelay.js',
+                ['depends' => [JqueryAsset::class]]);
+        } catch (InvalidConfigException $e) {
+            throw new \yii\db\Exception($e);
+        }
+
+        ?>
 
     </div>
     <!-- /.login-box-body -->

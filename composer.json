@@ -27,7 +27,8 @@
         "yiidoc/yii2-redactor": "*",
         "yiisoft/yii2": "^2.0.44",
         "yiisoft/yii2-swiftmailer": "~2",
-        "kartik-v/yii2-date-range": "*"
+        "kartik-v/yii2-date-range": "*",
+        "php-http/curl-client": "^2.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -58,5 +59,3 @@
         }
     ]
 }
-
-
