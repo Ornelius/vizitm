@@ -214,9 +214,18 @@ class RequestViewManage
                         },
                         'staff'=> function(Request $request): bool {
                             $boll = false;
-                            if((($request->status === Request::STATUS_NEW) || ($this->userPosition === Users::POSITION_GL_INGENER)) && ($request->status !== Request::STATUS_DONE) && empty($request->due_date))
+                            if(
+                                (($request->status === Request::STATUS_NEW) || ($this->userPosition === Users::POSITION_GL_INGENER)) &&
+                                ($request->status !== Request::STATUS_DONE) &&
+                                empty($request->due_date) &&
+                                ($this->userPosition !== Users::POSITION_DEGURNI_OPERATOR)
+                            )
                                 $boll = true;
-                            if((($request->status === Request::STATUS_NEW) || ($this->userPosition === Users::POSITION_GL_INGENER)) && ($request->status !== Request::STATUS_DONE) && !empty($request->due_date))
+                            if(
+                                (($request->status === Request::STATUS_NEW) || ($this->userPosition === Users::POSITION_GL_INGENER)) &&
+                                ($request->status !== Request::STATUS_DONE) &&
+                                !empty($request->due_date)
+                            )
                             {
                                 $boll = false;
                                 if ($request->due_date >= (time() + (4 * 60 * 60)))

@@ -98,6 +98,7 @@ class RequestManageService
             ->setTextBody('Внимание')
             ->setHtmlBody('<b>' . $request->description . '</b>')
             ->send();
+
         return true;
     }
 

@@ -115,7 +115,7 @@ class RequestController extends Controller
             $this->service->requestWork($id, $form);
 
             $this->directService->createDirect($id, $form);
-            return $this->redirect($viewName);
+            return $this->redirect([$viewName]);
         }
 
 
@@ -169,7 +169,7 @@ class RequestController extends Controller
             if ($isValid) {
                 try{
                     $this->service->requestDone($form, $id);
-                    return $this->redirect($viewName);
+                    return $this->redirect([$viewName]);
                 } catch (DomainException $e) {
                     Yii::$app->errorHandler->logException($e);
                     Yii::$app->session->setFlash('error', $e->getMessage());
