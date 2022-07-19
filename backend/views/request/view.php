@@ -83,7 +83,7 @@ $this->params['breadcrumbs'][] =  Html::encode($this->title);
                                             <?= Yii::$app->formatter->asTime($model->created_at, 'short') ?>
                                             </span>
                                             <h3 class="timeline-header"><a href="#">
-                                                <?= Users::getFullName($model->user_id); ?>
+                                                <?= Users::getFullNameNotActive($model->user_id); ?>
                                                 </a> сформировал заявку</h3>
                                             <div class="timeline-body">
                                                 <?= $model->description ?>

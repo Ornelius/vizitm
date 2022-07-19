@@ -3,6 +3,7 @@
 namespace vizitm\entities\street;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%street}}".
@@ -12,7 +13,7 @@ use Yii;
  * @property int $created_by
  * @property string $name
  */
-class Street extends \yii\db\ActiveRecord
+class Street extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -22,7 +23,7 @@ class Street extends \yii\db\ActiveRecord
         return '{{%street}}';
     }
 
-    public static function create(string $name)
+    public static function create(string $name): Street
     {
         $street = new static();
         $street->created_at     = time();

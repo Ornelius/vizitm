@@ -13,9 +13,7 @@ use vizitm\forms\manage\request\RequestCreateForm;
 use Yii;
 use vizitm\entities\request\Request;
 use yii\bootstrap4\ActiveForm;
-use yii\data\ActiveDataProvider;
 use yii\db\StaleObjectException;
-use yii\debug\models\timeline\DataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -75,8 +73,7 @@ class RequestController extends Controller
     public function actionNew(): string
     {
         $searchModel = new SearchRequest();
-        $request_status = 1;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $request_status);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('new', [
             'searchModel'       => $searchModel,
@@ -91,8 +88,7 @@ class RequestController extends Controller
     public function actionWork(): string
     {
         $searchModel = new SearchRequest();
-        $request_status= 2;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $request_status);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('work', [
             'searchModel'           => $searchModel,
@@ -109,11 +105,9 @@ class RequestController extends Controller
         //$this->enableCsrfValidation = false;
         $form = new StaffForm();
         $post = Yii::$app->request->post();
-        $del_user_from_menu_id = Request::find()->where(['id'=>$id])->one()->work_whom;
 
         if ($form->load($post) && $form->validate()) {
             $this->service->requestWork($id, $form);
-
             $this->directService->createDirect($id, $form);
             return $this->redirect([$viewName]);
         }
@@ -121,7 +115,6 @@ class RequestController extends Controller
 
         return $this->renderAjax('staff', [
             'model'         => $form,
-            'user_id'    => $del_user_from_menu_id,
         ]);
 
     }
@@ -146,13 +139,11 @@ class RequestController extends Controller
     public function actionDone(): ?string /** Выполненные заявки!  */
     {
         $searchModel = new SearchRequest();
-        $request_status= 3;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $request_status);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('done', [
             'searchModel'               => $searchModel,
             'dataProvider'              => $dataProvider,
-            //'request_status'            => $request_status,
         ]);
     }
     /**
@@ -191,8 +182,7 @@ class RequestController extends Controller
     public function actionDue() /** Меню срочная заявка */
     {
         $searchModel = new SearchRequest();
-        $request_status = 4;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $request_status);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('due', [
             'searchModel'           => $searchModel,
@@ -201,12 +191,10 @@ class RequestController extends Controller
         ]);
     }
 
-    public function actionDuework()
-        /** Меню срочная заявка */
+    public function actionDuework() /** Меню срочная заявки в работе */
     {
         $searchModel = new SearchRequest();
-        $request_status = 5;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $request_status);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('duework', [
             'searchModel'           => $searchModel,

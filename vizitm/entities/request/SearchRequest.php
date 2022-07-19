@@ -2,6 +2,7 @@
 
 namespace vizitm\entities\request;
 
+use vizitm\entities\slaves\Slaves;
 use vizitm\entities\Users;
 use Yii;
 use yii\base\Model;
@@ -46,51 +47,53 @@ class SearchRequest extends Request
      * Creates data provider instance with search query applied
      *
      * @param array $params
-     * @param int $status
      * @return ActiveDataProvider
      */
-    public function search(array $params, int $status): ActiveDataProvider
+    public function search(array $params): ActiveDataProvider
     {
-        $position = Users::findUserByID(Yii::$app->user->getId())->position;
-
+        $status = Yii::$app->controller->action->id;
+        $position = Users::findUserByIDNotActive(Yii::$app->user->getId())->position;
         $query = Request::find()->joinWith(['building','photo']);
-        if($status === Request::STATUS_NEW) {
+        if(self::STATUS[$status] === self::STATUS_NEW) { /** Новая заявка **/
             $query->andFilterWhere([
-                'status' => ['status' => Request::STATUS_NEW] /** Новая заявка **/
+                'status' => ['status' => self::STATUS_NEW]
             ]);
-        } elseif ($status === Request::STATUS_WORK) { /** Заявка в работе **/
-            /*if(!(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR)))
+        } elseif (self::STATUS[$status] === self::STATUS_WORK) { /** Заявка в работе **/
+            $query->andFilterWhere([
+                'status' => ['status' => self::STATUS_WORK]
+            ]);
+            if(!(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR))){
                 $query->andFilterWhere([
-                    'work_whom' => ['work_whom' => Yii::$app->user->getId()] /** Фильтрация заявок по пользователю /
-                ]);*/
+                    'work_whom' => ['work_whom' => Yii::$app->user->getId()]
+                ]);
+                foreach (Slaves::findSlavesByMasterID(Yii::$app->user->getId()) as $slave){
+                    $query->orFilterWhere([
+                        'work_whom' => ['work_whom' => $slave['slave_id']]
+                    ]);
+                }
+            }
 
+
+        } elseif (self::STATUS[$status] === self::STATUS_DONE) { /** Выполненные заявки **/
             $query->andFilterWhere([
-                'status' => ['status' => Request::STATUS_WORK] /** Заявка в работе **/
+                'status' => ['status' => self::STATUS_DONE]
             ]);
-        } elseif ($status === Request::STATUS_DONE) { /** Выполненные заявки **/
-            //if(!(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR)))
-            //    $query->andFilterWhere([
-            //        'work_whom' => ['work_whom' => Yii::$app->user->getId()] /** Фильтрация заявок по пользователю **/
-            //    ]);
-            $query->andFilterWhere([
-                'status' => ['status' => Request::STATUS_DONE] /** Выполненная заявка **/
-            ]);
-        } elseif ($status === Request::STATUS_DUE) { /** Нераспределенные срочные заявка **/
+        } elseif (self::STATUS[$status] === self::STATUS_DUE) { /** Нераспределенные срочные заявка **/
             if(!(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR)))
                 $query->andFilterWhere([
                     'work_whom' => ['work_whom' => Yii::$app->user->getId()] /** Фильтрация заявок по пользователю **/
                 ]);
             $query->andFilterWhere([
-                'status' => ['status' => Request::STATUS_DUE] /** Срочная заявка **/
+                'status' => ['status' => self::STATUS_DUE] /** Срочная заявка **/
             ]);
 
-        }  elseif ($status === Request::STATUS_DUE_WORK) { /** Распределенные срочные заявка **/
+        }  elseif (self::STATUS[$status] === self::STATUS_DUE_WORK) { /** Распределенные срочные заявка **/
             if (!(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR)))
                 $query->andFilterWhere([
                     'work_whom' => ['work_whom' => Yii::$app->user->getId()]/** Фильтрация заявок по пользователю **/
                 ]);
             $query->andFilterWhere([
-                'status' => ['status' => Request::STATUS_DUE_WORK]/** Срочная заявка **/
+                'status' => ['status' => self::STATUS_DUE_WORK]/** Срочная заявка **/
             ]);
         }
 
@@ -118,7 +121,7 @@ class SearchRequest extends Request
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
-            $query->where('0=1');
+            //$query->where('0=1');
             return $dataProvider;
         }
 

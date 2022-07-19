@@ -72,7 +72,7 @@ class Building extends ActiveRecord
 
     public static function getAddressByID(int $id): string
     {
-        return self::find()->where(['id' => $id])->one()->address;
+        return static::find()->where(['id' => $id])->one()->address;
     }
 
 }

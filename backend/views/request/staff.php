@@ -26,13 +26,10 @@ $form = ActiveForm::begin([
         <div class="modal-body">
             <?php
 
-                $user = Users::findUserByID(Yii::$app->user->getId());
 
-                if($user->position != Users::POSITION_GL_INGENER) {
-                    echo $form->field($model, 'direct_to')->dropDownList([$user->id => $user->lastname],['prompt' => 'Выберите сотрудника']);
-                } else {
-                    echo $form->field($model, 'direct_to')->dropDownList(UserHelper::ListAllUsersExeptOne($user_id),['prompt' => 'Выберите сотрудника']);
-                }
+                $user = Users::findUserByID(Yii::$app->user->getId());
+                //print_r(UserHelper::ListSlavesUsers(Yii::$app->user->getId())); die();
+                echo $form->field($model, 'direct_to')->dropDownList(UserHelper::ListSlavesUsers(Yii::$app->user->getId()),['prompt' => 'Выберите сотрудника']);
 
 
 

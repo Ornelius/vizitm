@@ -2,7 +2,9 @@
 
 
 namespace vizitm\repositories;
+use DomainException;
 use RuntimeException;
+use vizitm\entities\request\Request;
 use vizitm\entities\Users;
 use Yii;
 use yii\db\StaleObjectException;
@@ -13,7 +15,6 @@ class UserRepository
     public function save(Users $user): void
     {
         if(!$user->save()) {
-
             throw new RuntimeException('Ошибка сохранения пользователя');
         } else {
             Yii::$app->getSession()->setFlash('success', 'Пользователь: ' . $user->username . ' сохранен в БД!');
@@ -26,6 +27,7 @@ class UserRepository
     public function deleteUsers(int $id)
     {
         $user = $this->findById($id);
+
 
         if(!$user->delete()){
             throw new RuntimeException('Ошибка удаления пользователя!');

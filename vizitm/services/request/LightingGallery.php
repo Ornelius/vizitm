@@ -14,6 +14,10 @@ use yii\helpers\StringHelper;
 
 class LightingGallery
 {
+    /**
+     * @throws \yii\base\InvalidConfigException
+     * @throws \Exception
+     */
     public static function getRequestItems(Request $request, bool $view = false): string
     {
 
@@ -23,7 +27,7 @@ class LightingGallery
         $hrefpdf = null;
         $due_date = null;
         $description = null;
-        $title = 'Заявку сформировал: '. Users::getFullName($request->user_id);
+        $title = 'Заявку сформировал: '. Users::getFullNameNotActive($request->user_id);
         $itemsOptions[] = null;
         if($view == false)
             $description = $request->description;
@@ -118,7 +122,7 @@ class LightingGallery
             //style="width:12%; margin: 4px; height: 22%; padding: 4px;
             //'<div data-src= "{source: {src:"/uploads/request/origion/5/3.mp4", "type":"video/mp4"}, "attributes": {"preload": none, "controls": true}}", class="btn btn-app" style="width:12%; margin: 3px; height: 22%; padding: 3px;">' . //$span .
 
-            LightGallery::widget([
+            LightingGalleryEXP::widget([
                 'items' => $items,
                 'itemsOptions' => $itemsOptions,
                 'options' => [

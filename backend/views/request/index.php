@@ -17,25 +17,26 @@ use yii\base\InvalidConfigException;
 use yii\web\JqueryAsset;
 use yii\widgets\Pjax;
 
-$hasNew             = false;
-$hasWork            = false;
-$hasDone            = false;
-$hasDeu             = false;
-$hasDeuWork         = false;
-$position = Users::findUserByID(Yii::$app->user->getId())->position;
+//$hasNew             = false;
+//$hasWork            = false;
+//$hasDone            = false;
+//$hasDeu             = false;
+//$hasDeuWork         = false;
+//$position = Users::findUserByIDNotActive(Yii::$app->user->getId())->position;
 $content = new RequestViewManage();
-if($viewName === 'work')
+//$viewName = Yii::$app->controller->action->id;
+
+/*if($viewName === 'work')
 {
-    //if(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR))
-        $hasWork = true;
+    $hasWork = true;
 } elseif ($viewName === 'done')
 {
     $hasDone = true;
 } elseif ($viewName === 'duework')
 {
-    if(($position === 3) || ($position === 6))
+    if(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR))
         $hasDeuWork = true;
-}
+}*/
 
 ?>
 <div class="modal intermodal staff" id="staffForm" role="dialog" data-keyboard="false" data-backdrop="static">
@@ -48,6 +49,13 @@ if($viewName === 'work')
     </div>
 <?php endif; ?>
 
+<?php if (Yii::$app->session->hasFlash('wrong')): ?>
+    <div class="alert alert-success alert-dismissible" id="wrongMessage">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-check"></i><?= Yii::$app->session->getFlash('wrong') ?></h5>
+    </div>
+<?php endif; ?>
+
 <div class="request-index">
     <?php
     Pjax::begin();
@@ -55,16 +63,14 @@ if($viewName === 'work')
         $content->setContent(
             $dataProvider,
             $searchModel,
-            //$hasNew,
-            $hasWork,
-            $hasDone,
-            //$hasDeu,
-            $hasDeuWork,
-            $viewName);
+            //$hasWork,
+            //$hasDone,
+            //$hasDeuWork,
+            //Yii::$app->controller->action->id
+        );
     } catch (Exception $e) {
         echo $e->getMessage();
     }
-
     echo $content->getContent();
     Pjax::end();
     ?>

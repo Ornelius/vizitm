@@ -23,6 +23,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h5><i class="icon fas fa-check"></i><?= Yii::$app->session->getFlash('success') ?></h5>
                  </div>
     <?php endif; ?>
+    <?php if (Yii::$app->session->hasFlash('error')): ?>
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-check"></i><?= Yii::$app->session->getFlash('error') ?></h5>
+        </div>
+    <?php endif; ?>
     <p>
         <?= Html::a('Create Users', ['create'], ['class' => 'btn btn-success']) ?>
     </p>

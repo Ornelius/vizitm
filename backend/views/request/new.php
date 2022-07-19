@@ -8,7 +8,6 @@
 use yii\helpers\Html;
 
 $this->title = 'Текущие заявки';
-    $viewName           = 'new';
 
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -20,7 +19,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= $this->render('index', [
     'searchModel'           => $searchModel,
     'dataProvider'          => $dataProvider,
-    'viewName'              => $viewName,
 ]);
 
 

@@ -31,9 +31,12 @@ class UsersController extends Controller
     {
         parent::__construct($id, $module, $config);
         $this->service = $service;
-        $position = Users::findUserByID(Yii::$app->user->getId())->position;
-        if($position === Users::POSITION_ADMINISTRATOR)
-            $this->bool = true;
+        if(Yii::$app->user->getId() != null) {
+            $position = Users::findUserByID(Yii::$app->user->getId())->position;
+            if($position === Users::POSITION_ADMINISTRATOR)
+                $this->bool = true;
+        }
+
     }
 
 

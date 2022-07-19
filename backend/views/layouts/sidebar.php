@@ -42,16 +42,22 @@ use yii\helpers\Url;
         <nav class="mt-2">
             <?php
             $position = Users::findUserByID(Yii::$app->user->getId())->position;
-            $style = 'display: none';
+            $visible = false;
             if(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR)) /** Елсли должность главного инженера или дежурного оператора*/
-                $style = 'display: block';
+                $visible = true;
                 $menu_items =  [
                     ['label' => 'Текущие заявки', 'icon' => 'newspaper', 'url' => [Url::toRoute('/request/new')]],
                     ['label' => 'Заявки в работе', 'icon' => 'wrench', 'url' => [Url::toRoute('request/work')]],
-                    ['label' => 'Срочные заявки', 'icon' => ' fa-exclamation-circle', 'url' => [Url::toRoute('request/due')], 'options'=>['style' => $style]],
+                    ['label' => 'Срочные заявки', 'icon' => ' fa-exclamation-circle', 'url' => [Url::toRoute('request/due')], 'visible' => $visible],
                     ['label' => 'Заявки в работе', 'icon' => ' fa-exclamation-circle', 'url' => [Url::toRoute('request/duework')]],
                     ['label' => 'Выполненные заявки', 'icon' => 'thumbs-up', 'url' => [Url::toRoute('request/done')]],
                 ];
+            $visible = false;
+            if(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_ADMINISTRATOR ) || ($position === Users::POSITION_INGENER)) /** Елсли должность главного инженера или дежурного оператора*/
+                $visible = true;
+            $menu_person =  [
+                ['label' => 'Подчиненные', 'icon' => 'newspaper', 'url' => [Url::toRoute('/slaves/index')]],
+            ];
 
             echo Menu::widget([
                 'items' => [
@@ -70,6 +76,13 @@ use yii\helpers\Url;
                         'icon' => 'far fa-file',
                         //'badge' => '<span class="fa-file"></span>',
                         'items' => $menu_items,
+                    ],
+                    [
+                        'label' => 'Мои подчиненные',
+                        'icon' => 'fas fa-user-alt',
+                        //'badge' => '<span class="fa-file"></span>',
+                        'items' => $menu_person,
+                        'visible' => $visible,
                     ],
 /*                  ['label' => 'Simple Link', 'icon' => 'th', 'badge' => '<span class="right badge badge-danger">New</span>'],
                     ['label' => 'Yii2 PROVIDED', 'header' => true],

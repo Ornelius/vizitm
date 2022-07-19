@@ -18,7 +18,7 @@ use yii\helpers\Url;
 class RequestViewManage
 {
 
-    public ?string  $content;
+    public ?string  $content = null;
     public ?int     $userID;
     public ?int     $userPosition;
     public ?bool    $statusOfButton;
@@ -28,14 +28,14 @@ class RequestViewManage
     {
         $user_id = Yii::$app->user->getId();
         $this->userID       = $user_id;
-        $this->userPosition = Users::findUserByID($user_id)->position;
+        $this->userPosition = Users::findUserByIDNotActive($user_id)->position;
         $this->statusOfButton = $this->getPosition();
     }
     public function getPosition(): bool
     {
-        if($this->userPosition !== Users::POSITION_DEGURNI_OPERATOR) {
+        if($this->userPosition !== Users::POSITION_DEGURNI_OPERATOR)
             return true;
-        }
+
         return true;
 
     }
@@ -45,17 +45,26 @@ class RequestViewManage
      */
     public function setContent(
         $dataProvider,
-        $searchModel,
-        //$hasNew             = false,
-        $hasWork            = false,
-        $hasDone            = false,
-        //$hasDeu             = false,
-        $hasDeuWork         = false,
-        $viewName            = null
+        $searchModel
+        //$hasWork            = false,
+        //$hasDone            = false,
+        //$hasDeuWork         = false,
+        //$viewName            = null
     )
     {
+        $viewName = Yii::$app->controller->action->id;
+        $hasWork = false;
+        $hasDeuWork = false;
+        $hasDone = false;
+        if($viewName === 'work'){
+            $hasWork = true;
+        } elseif ($viewName === 'duework'){
+            $hasDeuWork = true;
+        } elseif ($viewName === 'done') {
+            $hasDone = true;
+        }
         $label = 'В работе у сотрудника';
-        if ($hasDone === true)
+        if ($viewName === 'done')
             $label = 'Выполнил сотрудник';
 
         $this->content = GridView::widget([
@@ -151,10 +160,12 @@ class RequestViewManage
                     'headerOptions'     => ['style' => 'width:10vh;vertical-align: middle;'],
                     'label'             => $label,
                     'format'            => 'raw',
-                    'filter'            => UserHelper::ListPositionUsers(),
+                    'filter'            => UserHelper::ListPositionUsersNotActive(),
                     'value'             => function(Request $request)
                     {
-                        return Users::findUserByID($request->work_whom)->lastname;
+                        if(!$user = Users::findUserByIDNotActive($request->work_whom))
+                            return "Нет пользователя!";
+                        return $user->lastname;
                     },
                     'visible'           => $hasWork or $hasDeuWork or $hasDone,
                 ],
@@ -219,6 +230,14 @@ class RequestViewManage
                                 ($request->status !== Request::STATUS_DONE) &&
                                 empty($request->due_date) &&
                                 ($this->userPosition !== Users::POSITION_DEGURNI_OPERATOR)
+                            )
+                                $boll = true;
+                            if(
+                                ($request->status === Request::STATUS_WORK) &&
+                                ($request->status !== Request::STATUS_DONE) &&
+                                empty($request->due_date) &&
+                                ($this->userPosition !== Users::POSITION_DEGURNI_OPERATOR) && ($this->userPosition === Users::POSITION_INGENER)
+
                             )
                                 $boll = true;
                             if(
@@ -287,7 +306,7 @@ class RequestViewManage
         ]);}
 
 
-    public function getContent(): string
+    public function getContent(): ?string
     {
         return $this->content;
     }

@@ -1,11 +1,13 @@
 <?php
 namespace vizitm\services\manage;
 use DomainException;
+use vizitm\entities\request\Request;
 use vizitm\entities\Users;
 use vizitm\forms\manage\profile\ProfileEditForm;
 use vizitm\forms\manage\User\UserCreateForm;
 use vizitm\repositories\UserRepository;
 use vizitm\forms\manage\User\UserEditForm;
+use yii\db\StaleObjectException;
 
 class UserManageService
 {
@@ -36,7 +38,7 @@ class UserManageService
         }
 
     }
-    public function edit($id, UserEditForm $form): void
+    public function edit(int $id, UserEditForm $form): void
     {
 
         $user = $this->repository->get($id);
@@ -80,14 +82,18 @@ class UserManageService
         $this->repository->save($user);
     }
 
-    public function deleteUser($id): void
+    /**
+     * @throws StaleObjectException
+     */
+    public function deleteUser(int $id)
     {
-        $this->repository->deleteUsers($id);
+        if(!empty(Request::listOfRequestNotDoneByUser($id)))
+            throw new DomainException('Ошибка увольнения сотрудника! У сотрудника есть невыполненные задачи! ');
+        //$this->repository->deleteUsers($id);
     }
     public function findUserById(int $id): Users
     {
         return $this->repository->findById($id);
-
     }
 
 }

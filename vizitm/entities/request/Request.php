@@ -3,7 +3,6 @@
 namespace vizitm\entities\request;
 use vizitm\entities\Users;
 use vizitm\entities\building\Building;
-use vizitm\forms\manage\request\RequestCreateForm;
 use vizitm\forms\manage\request\RequestEditForm;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -43,22 +42,49 @@ use yii\web\UploadedFile;
  */
 class Request extends ActiveRecord
 {
+
     const STATUS_NEW            = 1;
     const STATUS_WORK           = 2;
     const STATUS_DONE           = 3;
     const STATUS_DUE            = 4;
     const STATUS_DUE_WORK       = 5;
 
+    const STATUS = [
+        'new'       => self::STATUS_NEW,
+        'work'      => self::STATUS_WORK,
+        'done'      => self::STATUS_DONE,
+        'due'       => self::STATUS_DUE,
+        'duework'   => self::STATUS_DUE_WORK
+    ];
     /**
      *
-     * @param int $building_id
-     * @param string $description
-     * @param int $type
-     * @param int $room
-     * @param int|null $type_of_work
-     * @param int|null $due_date
-     * @return Request
+     * @return bool
      */
+
+    public function isNew(): bool
+    {
+        return $this->status === self::STATUS_NEW;
+    }
+
+    public function isWork(): bool
+    {
+        return $this->status === self::STATUS_WORK;
+    }
+
+    public function isDone(): bool
+    {
+        return $this->status === self::STATUS_DONE;
+    }
+
+    public function isDue(): bool
+    {
+        return $this->status === self::STATUS_DUE;
+    }
+
+    public function isDueWork(): bool
+    {
+        return $this->status === self::STATUS_DUE_WORK;
+    }
 
     public static function create(
         int $building_id,
@@ -113,7 +139,6 @@ class Request extends ActiveRecord
         $this->status           = self::STATUS_WORK;
         if($this->due_date !== null)
             $this->status       = self::STATUS_DUE_WORK;
-
     }
 
     /**
@@ -203,6 +228,11 @@ class Request extends ActiveRecord
     public function addPhoto(UploadedFile $file, int $request, int $typeOfPhoto, int $sortOfFile): Photo
     {
         return Photo::create($file, $request, $typeOfPhoto, $sortOfFile);
+    }
+
+    public static function listOfRequestNotDoneByUser(int $user_id): array
+    {
+        return self::find()->andWhere(['user_id' => $user_id])->andWhere(['done' => null])->all();
     }
 
 }

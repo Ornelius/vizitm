@@ -5,6 +5,7 @@ namespace vizitm\helpers;
 
 
 use Exception;
+use vizitm\entities\Users;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
@@ -12,12 +13,7 @@ class PositionHelper
 {
     public static function positionList(): array
     {
-        return [
-            1      => 'Теплотехник',
-            2      => 'Инженер',
-            3      => 'Гл.Инженер',
-            4       => 'Инженер КИПиА',
-        ];
+       return UserHelper::positionList();
     }
 
     /**

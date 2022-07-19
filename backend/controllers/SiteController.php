@@ -20,8 +20,8 @@ class SiteController extends Controller
     /**
      * @var mixed
      */
-    private $authService;
-    private $signupService;
+    private AuthService $authService;
+    private SignupService $signupService;
 
 
     public function __construct(
@@ -64,7 +64,7 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex(): string
     {
         return $this->render('index');
     }

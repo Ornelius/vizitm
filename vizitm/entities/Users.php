@@ -1,6 +1,8 @@
 <?php
 namespace vizitm\entities;
 
+use vizitm\entities\slaves\Slaves;
+use vizitm\entities\request\Request;
 use Yii;
 use yii\base\Exception;
 use yii\base\NotSupportedException;
@@ -12,21 +14,23 @@ use yii\db\ActiveQuery;
 /**
  * User model
  *
- * @property int        $id
- * @property string     $username
- * @property string     $password_hash
- * @property string     $password_reset_token
- * @property string     $verification_token
- * @property string     $email
- * @property string     $name
- * @property string     $lastname
- * @property int        $position
- * @property string     $auth_key
- * @property int        $status
- * @property int        $created_at
- * @property int        $updated_at
+ * @property int $id
+ * @property string $username
+ * @property string $password_hash
+ * @property string $password_reset_token
+ * @property string $verification_token
+ * @property string $email
+ * @property string $name
+ * @property string $lastname
+ * @property int $position
+ * @property string $auth_key
+ * @property int $status
+ * @property int $created_at
+ * @property int $updated_at
  * @property-read ActiveQuery $profile
  * @property-read string $authKey
+ * @property-read ActiveQuery $slaves
+ * @property-read ActiveQuery $request
  * @property string $password write-only password
  */
 class Users extends ActiveRecord implements IdentityInterface
@@ -46,13 +50,14 @@ class Users extends ActiveRecord implements IdentityInterface
     }
 
 
-    const POSITION_ADMINISTRATOR    = 0;
-    const POSITION_TEPLOTEHNIK      = 1;
-    const POSITION_INGENER          = 2;
-    const POSITION_GL_INGENER       = 3;
-    const POSITION_KIP              = 4;
-    const POSITION_UCHETCHIK        = 5;
-    const POSITION_DEGURNI_OPERATOR = 6;
+    const POSITION_ADMINISTRATOR        = 0;
+    const POSITION_TEPLOTEHNIK          = 1;
+    const POSITION_INGENER              = 2;
+    const POSITION_GL_INGENER           = 3;
+    const POSITION_KIP                  = 4;
+    const POSITION_UCHETCHIK            = 5;
+    const POSITION_DEGURNI_OPERATOR     = 6;
+    const POSITION_POMOSHNIK_INGENERA   = 7;
 
 
 
@@ -140,8 +145,17 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function getFullName(int $id): string
     {
-        return static::find()->where(['id' => $id, 'status' => self::STATUS_ACTIVE])->one()->name . ' ' .
-            static::find()->where(['id' => $id, 'status' => self::STATUS_ACTIVE])->one()->lastname;
+        $user = static::find()->where(['id' => $id, 'status' => self::STATUS_ACTIVE])->one();
+        return $user->name . ' ' .
+            $user->lastname;
+
+    }
+    public static function getFullNameNotActive(int $id): string
+    {
+        $user = static::find()->where(['id' => $id])->one();
+        if($user->status !== Users::STATUS_ACTIVE)
+            return $user->name . ' ' . $user->lastname . '. ' . ' Сейчас пользователь не активен!';
+        return $user->name . ' ' . $user->lastname;
 
     }
 
@@ -151,7 +165,7 @@ class Users extends ActiveRecord implements IdentityInterface
      * @param string $username
      *
      */
-    public static function findByUsername(string $username)
+    public static function findByUsername(string $username): ?Users
     {
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
@@ -159,6 +173,10 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function findUserByID(int $id)
     {
         return static::find()->where(['id' => $id, 'status' => self::STATUS_ACTIVE])->one();
+    }
+    public static function findUserByIDNotActive(int $id)
+    {
+            return static::find()->where(['id' => $id])->one();
     }
     public static function findEmailByID(int $id): string
     {
@@ -304,9 +322,14 @@ class Users extends ActiveRecord implements IdentityInterface
         $this->status = self::STATUS_ACTIVE;
     }
 
-    public function getProfile(): ActiveQuery
+    public function getRequest(): ActiveQuery
     {
-        return $this->hasOne(Profile::class, ['user_id' =>'id']);
+        return $this->hasMany(Request::class, ['user_id' =>'id']);
+    }
+
+    public function getSlaves(): ActiveQuery
+    {
+        return $this->hasMany(Slaves::class, ['master_id' =>'id']);
     }
 
 

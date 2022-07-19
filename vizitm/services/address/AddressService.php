@@ -5,10 +5,13 @@ namespace vizitm\services\address;
 
 
 use vizitm\entities\address\Street;
+use vizitm\forms\manage\address\StreetCreateForm;
 
 class AddressService
 {
-    private $address;
+    //private $address;
+
+    private $repository;
 
     public function __construct(Street $street, string $number)
     {

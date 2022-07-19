@@ -1,6 +1,8 @@
 <?php
 namespace vizitm\services\request;
 use DomainException;
+use http\Exception\InvalidArgumentException;
+use http\Exception\RuntimeException;
 use vizitm\entities\request\Photo;
 use vizitm\entities\request\Request;
 use vizitm\entities\building\Building;
@@ -86,18 +88,31 @@ class RequestManageService
         $this->saveRequestPhoto($form->photo->files, $request,Photo::PHOTO_OF_PROBLEM_DONE);
         return true;
     }
+
+    /**
+     * @throws StaleObjectException
+     */
     public function requestWork(int $id, StaffForm $staff):bool
     {
+
         $request = $this->repository->get($id);
+
+
         $request->work($staff->direct_to);
         $this->repository->update($request);
-        Yii::$app->mailer->compose()
+        //print_r($staff->direct_to); die();
+        //if(!empty(Users::findEmailByID($staff->direct_to)))
+        if (!Yii::$app->mailer->compose()
             ->setFrom('vizitm.samara@gmail.com')
             ->setTo(Users::findEmailByID($staff->direct_to))
             ->setSubject('Вам направлена заявка: ' . Building::getAddressByID($request->building_id))
             ->setTextBody('Внимание')
             ->setHtmlBody('<b>' . $request->description . '</b>')
-            ->send();
+            ->send())
+        {
+            throw new RuntimeException('Письмо не отправилось!');
+
+        }
 
         return true;
     }

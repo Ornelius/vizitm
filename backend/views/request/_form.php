@@ -9,7 +9,6 @@ use yii\base\InvalidConfigException;
 use yii\helpers\Html;
 use yii\redactor\widgets\Redactor;
 use yii\web\JqueryAsset;
-use yii\web\NotFoundHttpException;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -53,8 +52,8 @@ use yii\widgets\ActiveForm;
 
     <?php
 
-    $position = Users::findUserByID(Yii::$app->user->getId())->position;
-    if(($position === 3) )//&& $update != true)
+    $position = Users::findUserByIDNotActive(Yii::$app->user->getId())->position;
+    if(($position === Users::POSITION_GL_INGENER) )//&& $update != true)
         try {
             echo $form->field($model, 'due_date')->widget(DatePicker::class, [
                 'value' => date('d.M.Y'),
@@ -92,6 +91,7 @@ use yii\widgets\ActiveForm;
                     'showDelete' => true,
                     'showUpload' => false,
                     'showPreview' => true,
+                    'previewFileType' => 'any',
                     'overwriteInitial' => true,
                     'initialPreviewAsData' => true,
                     'removeClass' => 'btn btn-danger',
@@ -99,6 +99,7 @@ use yii\widgets\ActiveForm;
                     //'browseClass' => 'btn btn-success btn-block' ,
                     //'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ' ,
                     'browseLabel' => 'Добавить ФОТО',
+                    'maxFileSize'=>10002800,
                     'allowedFileExtensions' => [
                         'jpg',
                         'jpeg',
@@ -106,13 +107,13 @@ use yii\widgets\ActiveForm;
                         'png',
                         'pdf',
                         'mp4',
-                        //'avi'
+                        'avi',
                     ],
                 ],
                 'options' => [
                     'accept' => [
                         'image/*',
-                        //'video/*'
+                        'video/*'
                     ],
                     'multiple' => true,
                 ],
