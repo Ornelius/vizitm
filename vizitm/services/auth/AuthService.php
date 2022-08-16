@@ -9,7 +9,7 @@ use vizitm\repositories\UserRepository;
 
 class AuthService
 {
-    private $users;
+    private UserRepository $users;
 
     public function __construct(UserRepository $users)
     {

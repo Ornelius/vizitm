@@ -5,20 +5,24 @@ namespace vizitm\services\request;
 
 
 use dynamikaweb\lightgallery\LightGallery;
+use Exception;
 use vizitm\entities\request\Photo;
 use vizitm\entities\request\Request;
 use vizitm\entities\Users;
 use vizitm\helpers\RequestHelper;
 use Yii;
+use yii\base\InvalidConfigException;
+use yii\helpers\Html;
 use yii\helpers\StringHelper;
+use yii\helpers\Url;
 
 class LightingGallery
 {
     /**
-     * @throws \yii\base\InvalidConfigException
-     * @throws \Exception
+     * @throws InvalidConfigException
+     * @throws Exception
      */
-    public static function getRequestItems(Request $request, bool $view = false): string
+    public static function getRequestItems(Request $request, string $viewName, bool $view = false): string
     {
 
         $i=0;
@@ -27,10 +31,23 @@ class LightingGallery
         $hrefpdf = null;
         $due_date = null;
         $description = null;
-        $title = 'Заявку сформировал: '. Users::getFullNameNotActive($request->user_id);
+        $comments = '';
+        $title = 'Заявку сформировал: '. Users::getFullName($request->user_id);
         $itemsOptions[] = null;
         if($view == false)
             $description = $request->description;
+        if(!empty($request->comments))
+            $comments = Html::a('<i class="far fa-solid fa-comment-dots style="font-size:18px; margin: 1px; padding: 1px;"></i>',
+                Url::toRoute(['request/comments', 'id' => $request->id, 'viewName' => $viewName]),
+                [
+                    'title' => 'Посмотреть комментарии',
+                    'data-toggle' => 'modal',
+                    'class' => 'commentForm',
+                    //'data-target' => '#idComments',
+                    //'id' => 'commentForm'
+                ]
+
+            );
 
 
         if(!$request->photo){
@@ -71,7 +88,7 @@ class LightingGallery
                 $imageOption[$i]= [
                     ///'tag'   => 'div',
                     'width' => $width,
-                    'high'  =>  $high,
+                    'high'  => $high,
                     'alt'   => $request->building->address . ' ' . RequestHelper::roomName($request->room) . ' - ' . $text,
                     'style' => $style,
                     'title' => $title,
@@ -105,12 +122,12 @@ class LightingGallery
         }
 
 
-        if(!empty($request->due_date))
+        if(!$request->emptyDueDate())
         {
             $style='"color: crimson; border-radius: 10px;"';
             if($request->due_date >= (time()+(4*60*60)) && $request->done_at <= $request->due_date)
                 $style='';
-            if(($request->status === Request::STATUS_DONE) && ($request->done_at <= $request->due_date))
+            if(($request->isDone()) && ($request->done_at <= $request->due_date))
                 $style='';
             $due_date = '<i class="fas fa fa-calendar" style=' . $style . '></i><i>&nbsp' . Yii::$app->formatter->asDate($request->due_date) . '</i>';
         }
@@ -162,7 +179,7 @@ class LightingGallery
                 ],
 
             ]) . '</div>' .
-            '<div class=" timeline-item d-flex align-items-center flex-column" style="width:5%;margin: 6px; padding: 6px;">' . $hrefvideo . '<p>'.$hrefpdf.'</p>' .
+            '<div class=" timeline-item d-flex align-items-center flex-column" style="width:5%;margin: 6px; padding: 6px;">' . $hrefvideo . '<p>'.$hrefpdf. '</p>' .$comments. '</p>'.
 
             '</div>
                             <div class="ml-auto d-flex align-items-center" style="margin: 3px; padding: 3px;" >' . StringHelper::truncate($description, 120) .'</div>

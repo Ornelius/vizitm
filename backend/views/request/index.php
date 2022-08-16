@@ -4,16 +4,14 @@
 /* @var $searchModel vizitm\entities\request\SearchRequest */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $request_status */
-/* @var $hasNew */
-/* @var $hasWork */
-/* @var $hasDone */
-/* @var $hasDeu */
-/* @var $hasDeuWork */
 /* @var $viewName */
 
 use vizitm\entities\Users;
+use vizitm\forms\manage\comments\CommentsForm;
 use vizitm\services\request\RequestViewManage;
+use yii\base\BaseObject;
 use yii\base\InvalidConfigException;
+use yii\bootstrap4\Modal;
 use yii\web\JqueryAsset;
 use yii\widgets\Pjax;
 
@@ -40,6 +38,9 @@ $content = new RequestViewManage();
 
 ?>
 <div class="modal intermodal staff" id="staffForm" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-md "></div>
+</div>
+<div class="modal intermodal staff" id="commentForm" role="dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-md "></div>
 </div>
 <?php if (Yii::$app->session->hasFlash('success')): ?>
@@ -78,9 +79,13 @@ $content = new RequestViewManage();
     <div class="modal" id="addStaffFormModel" role="dialog">
         <div class="modal-dialog modal-md "></div>
     </div>
+    <!-- POPUP MODAL COMMENTS -->
+    <div class="modal" id="idComments" role="dialog">
+        <div class="modal-dialog modal-md "></div>
+    </div>
+
 
     <?php
-
     try {
         $this->registerJsFile(
             '@web/js/ajaxForm.js',
@@ -92,6 +97,13 @@ $content = new RequestViewManage();
     try {
         $this->registerJsFile(
             '@web/js/staffModal.js',
+            ['depends' => [JqueryAsset::class]]);
+    } catch (InvalidConfigException $e) {
+        throw new \yii\db\Exception($e);
+    }
+    try {
+        $this->registerJsFile(
+            '@web/js/commentModal.js',
             ['depends' => [JqueryAsset::class]]);
     } catch (InvalidConfigException $e) {
         throw new \yii\db\Exception($e);

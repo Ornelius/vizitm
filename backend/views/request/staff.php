@@ -7,8 +7,7 @@ use yii\bootstrap4\ActiveForm;
 
 /* @var $model  */
 /* @var $user_id */
-?>
-<?php
+
 $form = ActiveForm::begin([
     'id' => 'staff',
     'enableAjaxValidation'      => true,
@@ -26,10 +25,9 @@ $form = ActiveForm::begin([
         <div class="modal-body">
             <?php
 
-
                 $user = Users::findUserByID(Yii::$app->user->getId());
-                //print_r(UserHelper::ListSlavesUsers(Yii::$app->user->getId())); die();
                 echo $form->field($model, 'direct_to')->dropDownList(UserHelper::ListSlavesUsers(Yii::$app->user->getId()),['prompt' => 'Выберите сотрудника']);
+                echo $form->field($model->comment, 'comment')->textarea(['rows' => 4, 'cols' => 5, 'maxlength' => true, 'placeholder' => 'Оставьте комментарий']);
 
 
 
@@ -42,8 +40,3 @@ $form = ActiveForm::begin([
 
     </div>
 <?php ActiveForm::end(); ?>
-
-
-<?php
-
-?>

@@ -1,6 +1,7 @@
 <?php
 
 namespace vizitm\entities\request;
+use vizitm\entities\comments\Comments;
 use vizitm\entities\Users;
 use vizitm\entities\building\Building;
 use vizitm\forms\manage\request\RequestEditForm;
@@ -37,25 +38,27 @@ use yii\web\UploadedFile;
  * @property Photo[] $photo                 Фотографии проблемы
  * @property Building $building             Адрес объекта недвижимости
  * @property-read ActiveQuery $video
+ * @property-read ActiveQuery $comments
  * @property Users $user
  *
  */
 class Request extends ActiveRecord
 {
 
-    const STATUS_NEW            = 1;
-    const STATUS_WORK           = 2;
-    const STATUS_DONE           = 3;
-    const STATUS_DUE            = 4;
-    const STATUS_DUE_WORK       = 5;
+    const STATUS_NEW = 1;
+    const STATUS_WORK = 2;
+    const STATUS_DONE = 3;
+    const STATUS_DUE = 4;
+    const STATUS_DUE_WORK = 5;
 
     const STATUS = [
-        'new'       => self::STATUS_NEW,
-        'work'      => self::STATUS_WORK,
-        'done'      => self::STATUS_DONE,
-        'due'       => self::STATUS_DUE,
-        'duework'   => self::STATUS_DUE_WORK
+        'new' => self::STATUS_NEW,
+        'work' => self::STATUS_WORK,
+        'done' => self::STATUS_DONE,
+        'due' => self::STATUS_DUE,
+        'duework' => self::STATUS_DUE_WORK
     ];
+
     /**
      *
      * @return bool
@@ -85,6 +88,12 @@ class Request extends ActiveRecord
     {
         return $this->status === self::STATUS_DUE_WORK;
     }
+
+    public function emptyDueDate(): bool
+    {
+        return empty($this->due_date);
+    }
+
 
     public static function create(
         int $building_id,
@@ -224,6 +233,16 @@ class Request extends ActiveRecord
     {
         return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
+
+    /**
+     * Gets query for [[User]].
+     *     * @return ActiveQuery
+     */
+    public function getComments(): ActiveQuery
+    {
+        return $this->hasMany(Comments::class, ['request_id' => 'id']);
+    }
+
 
     public function addPhoto(UploadedFile $file, int $request, int $typeOfPhoto, int $sortOfFile): Photo
     {

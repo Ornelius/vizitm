@@ -15,7 +15,7 @@ class DirectRepository
         {
             throw new RuntimeException('Ошибка сохраниния списка ответственного!');
         } else {
-            Yii::$app->getSession()->setFlash('success', 'ПО Заявке №' . $direct->request_id . ' назначен ответчтвенным ' . Users::getFullName($direct->direct_to));
+            Yii::$app->getSession()->setFlash('success', 'ПО Заявке №' . $direct->request_id . ' назначен ответственным ' . Users::getFullName($direct->direct_to));
         }
 
     }
