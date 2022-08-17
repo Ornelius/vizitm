@@ -9,7 +9,6 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="street-form">
-    <?php if (Yii::$app->session->hasFlash('error')); ?>
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'street')->textInput(['maxlength' => true]) ?>

@@ -12,7 +12,7 @@ abstract class CompositeForm extends Model
     /**
      * @var Model[]|array[]
      */
-    private $forms = [];
+    private array $forms = [];
 
     abstract protected function internalForms(): array;
 

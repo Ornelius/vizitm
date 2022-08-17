@@ -52,7 +52,7 @@ class SearchRequest extends Request
     public function search(array $params): ActiveDataProvider
     {
         $status = Yii::$app->controller->action->id;
-        $position = Users::findUserByIDNotActive(Yii::$app->user->getId())->position;
+        $user_id = Yii::$app->user->getId();
         $query = Request::find()->joinWith(['building','photo']);
         if(self::STATUS[$status] === self::STATUS_NEW) { /** Новая заявка **/
             $query->andFilterWhere([
@@ -62,24 +62,23 @@ class SearchRequest extends Request
             $query->andFilterWhere([
                 'status' => ['status' => self::STATUS_WORK]
             ]);
-            if(!(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR))){
+            if(!(Users::isPositionGalvaniEngineer($user_id) || Users::isPositionDegurniOperator($user_id))){
                 $query->andFilterWhere([
-                    'work_whom' => ['work_whom' => Yii::$app->user->getId()]
+                    'work_whom' => ['work_whom' => $user_id]
                 ]);
-                foreach (Slaves::findSlavesByMasterID(Yii::$app->user->getId()) as $slave){
+                foreach (Slaves::findSlavesByMasterID($user_id) as $slave){
                     $query->orFilterWhere([
                         'work_whom' => ['work_whom' => $slave['slave_id']]
                     ]);
                 }
             }
 
-
         } elseif (self::STATUS[$status] === self::STATUS_DONE) { /** Выполненные заявки **/
             $query->andFilterWhere([
                 'status' => ['status' => self::STATUS_DONE]
             ]);
         } elseif (self::STATUS[$status] === self::STATUS_DUE) { /** Нераспределенные срочные заявка **/
-            if(!(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR)))
+            if(!(Users::isPositionGalvaniEngineer($user_id) || Users::isPositionDegurniOperator($user_id)))
                 $query->andFilterWhere([
                     'work_whom' => ['work_whom' => Yii::$app->user->getId()] /** Фильтрация заявок по пользователю **/
                 ]);
@@ -88,10 +87,15 @@ class SearchRequest extends Request
             ]);
 
         }  elseif (self::STATUS[$status] === self::STATUS_DUE_WORK) { /** Распределенные срочные заявка **/
-            if (!(($position === Users::POSITION_GL_INGENER) || ($position === Users::POSITION_DEGURNI_OPERATOR)))
+            if (!(Users::isPositionGalvaniEngineer($user_id) || Users::isPositionDegurniOperator($user_id)))
                 $query->andFilterWhere([
                     'work_whom' => ['work_whom' => Yii::$app->user->getId()]/** Фильтрация заявок по пользователю **/
                 ]);
+            foreach (Slaves::findSlavesByMasterID($user_id) as $slave){
+                $query->orFilterWhere([
+                    'work_whom' => ['work_whom' => $slave['slave_id']]
+                ]);
+            }
             $query->andFilterWhere([
                 'status' => ['status' => self::STATUS_DUE_WORK]/** Срочная заявка **/
             ]);

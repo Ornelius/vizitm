@@ -1,7 +1,6 @@
 <?php
 namespace vizitm\services\request;
 use DomainException;
-use http\Exception\InvalidArgumentException;
 use http\Exception\RuntimeException;
 use vizitm\entities\request\Photo;
 use vizitm\entities\request\Request;
@@ -11,9 +10,12 @@ use vizitm\forms\manage\request\RequestCreateForm;
 use vizitm\forms\manage\request\RequestEditForm;
 use vizitm\forms\manage\request\RequestUpdateForm;
 use vizitm\forms\manage\request\StaffForm;
+
+use vizitm\repositories\CommentRepository;
 use vizitm\repositories\PhotoRepository;
 use vizitm\repositories\RequestRepository;
 use vizitm\repositories\VideoRepository;
+use vizitm\services\comments\CommentService;
 use Yii;
 use yii\db\StaleObjectException;
 
@@ -64,9 +66,7 @@ class RequestManageService
 
     }
 
-    /**
-     * @throws StaleObjectException
-     */
+
     public function edit(RequestEditForm $form, int $id): bool
     {
         $request = $this->repository->get($id);
@@ -84,7 +84,6 @@ class RequestManageService
         $request = $this->repository->get($id);
         $request->done($form->done_description);
         $this->repository->update($request);
-        //print_r('asdfasd'); die();
         $this->saveRequestPhoto($form->photo->files, $request,Photo::PHOTO_OF_PROBLEM_DONE);
         return true;
     }
@@ -96,10 +95,9 @@ class RequestManageService
     {
 
         $request = $this->repository->get($id);
-
-
         $request->work($staff->direct_to);
         $this->repository->update($request);
+        //$this->commentRepository->save($staff->comets);
         //print_r($staff->direct_to); die();
         //if(!empty(Users::findEmailByID($staff->direct_to)))
         if (!Yii::$app->mailer->compose()

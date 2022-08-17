@@ -1,6 +1,7 @@
 <?php
 namespace vizitm\entities;
 
+use vizitm\entities\comments\Comments;
 use vizitm\entities\slaves\Slaves;
 use vizitm\entities\request\Request;
 use Yii;
@@ -8,6 +9,7 @@ use yii\base\Exception;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\imagine\BaseImage;
 use yii\web\IdentityInterface;
 use yii\db\ActiveQuery;
 
@@ -31,10 +33,12 @@ use yii\db\ActiveQuery;
  * @property-read string $authKey
  * @property-read ActiveQuery $slaves
  * @property-read ActiveQuery $request
+ * @property-read \yii\db\ActiveQuery $comments
  * @property string $password write-only password
  */
 class Users extends ActiveRecord implements IdentityInterface
 {
+
 
     public function attributeLabels(): array
     {
@@ -66,6 +70,9 @@ class Users extends ActiveRecord implements IdentityInterface
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
 
+    /**
+     * @throws Exception
+     */
     public static function signup(string $username, string $email, string $password): self
     {
         $user = new static();
@@ -104,7 +111,7 @@ class Users extends ActiveRecord implements IdentityInterface
      */
     public function isActive():bool
     {
-        return $this->status == self::STATUS_ACTIVE;
+        return $this->status === self::STATUS_ACTIVE;
     }
 
 
@@ -145,15 +152,8 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function getFullName(int $id): string
     {
-        $user = static::find()->where(['id' => $id, 'status' => self::STATUS_ACTIVE])->one();
-        return $user->name . ' ' .
-            $user->lastname;
-
-    }
-    public static function getFullNameNotActive(int $id): string
-    {
         $user = static::find()->where(['id' => $id])->one();
-        if($user->status !== Users::STATUS_ACTIVE)
+        if(!$user->isActive())
             return $user->name . ' ' . $user->lastname . '. ' . ' Сейчас пользователь не активен!';
         return $user->name . ' ' . $user->lastname;
 
@@ -181,6 +181,20 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function findEmailByID(int $id): string
     {
         return static::find()->where(['id' => $id, 'status' => self::STATUS_ACTIVE])->one()->email;
+    }
+    public static function isPositionGalvaniEngineer(int $id): bool
+    {
+        $position = static::find()->where(['id' => $id])->one()->position;
+        return $position === Users::POSITION_GL_INGENER;
+    }
+    public static function isPositionDegurniOperator(int $id): bool
+    {
+        $position = static::find()->where(['id' => $id])->one()->position;
+        return $position === Users::POSITION_DEGURNI_OPERATOR;
+    }
+    public static function isSelf(int $id): bool
+    {
+        return $id === Yii::$app->user->getId();
     }
 
     /**
@@ -330,6 +344,11 @@ class Users extends ActiveRecord implements IdentityInterface
     public function getSlaves(): ActiveQuery
     {
         return $this->hasMany(Slaves::class, ['master_id' =>'id']);
+    }
+
+    public function getComments(): ActiveQuery
+    {
+        return $this->hasMany(Comments::class, ['user_id' => 'id']);
     }
 
 

@@ -1,5 +1,6 @@
 <?php
 /* @var $content string */
+/* @var $assetDir string */
 
 use yii\bootstrap4\Breadcrumbs;
 use yii\helpers\Html;

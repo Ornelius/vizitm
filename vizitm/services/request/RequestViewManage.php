@@ -5,6 +5,7 @@ namespace vizitm\services\request;
 use Exception;
 use kartik\daterange\DateRangePicker;
 use vizitm\entities\Users;
+use vizitm\entities\slaves\Slaves;
 use vizitm\helpers\AddressHelper;
 use vizitm\helpers\RequestHelper;
 use vizitm\helpers\UserHelper;
@@ -26,9 +27,8 @@ class RequestViewManage
 
     public function __construct()
     {
-        $user_id = Yii::$app->user->getId();
-        $this->userID       = $user_id;
-        $this->userPosition = Users::findUserByIDNotActive($user_id)->position;
+        $this->userID = Yii::$app->user->getId();
+        $this->userPosition = Users::findUserByIDNotActive($this->userID)->position;
         $this->statusOfButton = $this->getPosition();
     }
     public function getPosition(): bool
@@ -46,10 +46,6 @@ class RequestViewManage
     public function setContent(
         $dataProvider,
         $searchModel
-        //$hasWork            = false,
-        //$hasDone            = false,
-        //$hasDeuWork         = false,
-        //$viewName            = null
     )
     {
         $viewName = Yii::$app->controller->action->id;
@@ -102,9 +98,10 @@ class RequestViewManage
                     'attribute' => 'description',
                     'contentOptions' => ['style' => 'max-height:: 50px'],
                     'headerOptions' => ['style' => 'width: 55vh; vertical-align: middle;'],
-                    'value' => function (Request $request):string
+                    'value' => function (Request $request): string
                     {
-                        return LightingGallery::getRequestItems($request);
+                        $viewName = Yii::$app->controller->action->id;
+                        return LightingGallery::getRequestItems($request, $viewName);
                     },
                     'format' => 'raw',
                 ],
@@ -202,7 +199,6 @@ class RequestViewManage
                     'value'             => function(Request $request)
                     {
                         return StringHelper::truncate($request->description_done, 50);
-
                     },
                     'visible' => $hasDone,
                 ],
@@ -213,50 +209,38 @@ class RequestViewManage
                     'template' => '{delete} {staff} {done} {update} {view}' , //{update} {view}
                     'visible' => $this->statusOfButton,
                     'visibleButtons'=> [
-                        'delete'=> function(Request $request): bool { //Кнопка delete отображается у того кто создал заявку или у инженера и убрана в готовых заявках
-                            if((($request->user_id === $this->userID) || ($this->userPosition === Users::POSITION_GL_INGENER)) && $request->done == false)
+                        'delete'=> function(Request $request): bool { //Кнопка delete отображается у того кто создал заявку или у Гланогоинженера и убрана в готовых заявках
+                            if((Users::isSelf($request->user_id) || Users::isPositionGalvaniEngineer($this->userID)) && !$request->isDone())
                                 return true;
                             return false;
                         },
                         'done'=> function(Request $request): bool { //Кнопка done отображается у того кому назначена заявка
-                            if(($request->status === Request::STATUS_WORK || $request->status === Request::STATUS_DUE_WORK) && $this->userID === $request->work_whom)
+                            if(($request->isWork() || $request->isDueWork()) && Users::isSelf($request->work_whom))
                                 return true;
                             return false;
                         },
                         'staff'=> function(Request $request): bool {
                             $boll = false;
                             if(
-                                (($request->status === Request::STATUS_NEW) || ($this->userPosition === Users::POSITION_GL_INGENER)) &&
-                                ($request->status !== Request::STATUS_DONE) &&
-                                empty($request->due_date) &&
-                                ($this->userPosition !== Users::POSITION_DEGURNI_OPERATOR)
+                                ($request->isNew() || Users::isPositionGalvaniEngineer($this->userID)) &&
+                                !$request->isDone() && $request->emptyDueDate() && !Users::isPositionDegurniOperator($this->userID)
                             )
                                 $boll = true;
                             if(
-                                ($request->status === Request::STATUS_WORK) &&
-                                ($request->status !== Request::STATUS_DONE) &&
-                                empty($request->due_date) &&
-                                ($this->userPosition !== Users::POSITION_DEGURNI_OPERATOR) && ($this->userPosition === Users::POSITION_INGENER)
-
+                                $request->isWork() && !$request->isDone() && $request->emptyDueDate() && !Users::isPositionDegurniOperator($this->userID)
+                                && (Users::isPositionGalvaniEngineer($this->userID) || Slaves::haveSlaves($this->userID))
                             )
                                 $boll = true;
-                            if(
-                                (($request->status === Request::STATUS_NEW) || ($this->userPosition === Users::POSITION_GL_INGENER)) &&
-                                ($request->status !== Request::STATUS_DONE) &&
-                                !empty($request->due_date)
-                            )
+                            if( Users::isPositionGalvaniEngineer($this->userID) || !$request->isDone() && !$request->emptyDueDate())
                             {
                                 $boll = false;
                                 if ($request->due_date >= (time() + (4 * 60 * 60)))
                                     $boll = true;
                             }
-                            //$boll = true;
                             return $boll;
                         },
                         'update'=> function(Request $request): bool {
-                            if((($request->status === Request::STATUS_NEW || $request->status === Request::STATUS_DUE) && ($request->user_id === $this->userID))
-
-                            )
+                            if(($request->isNew() || $request->isDue()) && Users::isSelf($request->user_id))
                                 return true;
                             return false;
                         },
@@ -281,7 +265,7 @@ class RequestViewManage
                                     'data-toggle' => 'modal',
                                     'class' => 'staffForm',
                                     //'data-target' => '#staffForm',
-                                    'id' => 'staffFormButton'
+                                    //'id' => 'staffFormButton'
                                 ]
                             );
                         },
