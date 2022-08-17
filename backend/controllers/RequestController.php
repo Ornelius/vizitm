@@ -4,9 +4,11 @@ namespace backend\controllers;
 
 use DomainException;
 use vizitm\entities\request\SearchRequest;
+use vizitm\forms\manage\comments\CommentsForm;
 use vizitm\forms\manage\request\RequestEditForm;
 use vizitm\forms\manage\request\RequestUpdateForm;
 use vizitm\forms\manage\request\StaffForm;
+use vizitm\services\comments\CommentService;
 use vizitm\services\request\DirectService;
 use vizitm\services\request\RequestManageService;
 use vizitm\forms\manage\request\RequestCreateForm;
@@ -27,19 +29,22 @@ header ("Access-Control-Allow-Origin: *");
 class RequestController extends Controller
 {
 
-    private ?RequestManageService $service;
-    private ?DirectService $directService;
+    private ?RequestManageService   $service;
+    private ?DirectService          $directService;
+    private  CommentService         $commentService;
 
     public function __construct(
         $id,
         $module,
         RequestManageService    $service,
         DirectService           $directService,
+        CommentService          $commentService,
         $config = [])
     {
         parent::__construct($id, $module, $config);
         $this->service          = $service;
         $this->directService    = $directService;
+        $this->commentService   = $commentService;
     }
 
 
@@ -60,6 +65,9 @@ class RequestController extends Controller
                     'new'       => ['GET', 'POST'],
                     'create'    => ['GET', 'POST'],
                     'update'    => ['GET', 'POST'],
+                    'duework'    => ['GET', 'POST'],
+                    'commentsv'    => ['GET', 'POST'],
+                    'comments'    => ['GET', 'POST'],
                 ],
 
             ],
@@ -83,7 +91,7 @@ class RequestController extends Controller
 
     /**
      * Lists all Request models.
-     * @return string
+     * @return string ******
      */
     public function actionWork(): string
     {
@@ -99,6 +107,7 @@ class RequestController extends Controller
     /**
      * Lists all Request models.
      * @return Response|string
+     * @throws StaleObjectException
      */
     public function actionDirect(int $id, string $viewName)
     {
@@ -109,6 +118,9 @@ class RequestController extends Controller
         if ($form->load($post) && $form->validate()) {
             $this->service->requestWork($id, $form);
             $this->directService->createDirect($id, $form);
+            if($form->comment->load($post) && $form->comment->validate())
+                if(!empty($form->comment->comment))
+                    $this->commentService->createComment($id, Yii::$app->user->getId(), $form->comment);
             return $this->redirect([$viewName]);
         }
 
@@ -146,9 +158,11 @@ class RequestController extends Controller
             'dataProvider'              => $dataProvider,
         ]);
     }
+
     /**
      * Lists all Request models.
-     * @return mixed
+     * @return Response|string
+     * @throws StaleObjectException
      */
     public function actionRequestDone(int $id, string $viewName) /** Создание выполненной заявки */
     {
@@ -177,9 +191,10 @@ class RequestController extends Controller
 
     /**
      * Lists all Request models.
-     * @return mixed
+     * @return string
      */
-    public function actionDue() /** Меню срочная заявка */
+    public function actionDue(): string
+        /** Меню срочная заявка */
     {
         $searchModel = new SearchRequest();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -187,11 +202,17 @@ class RequestController extends Controller
         return $this->render('due', [
             'searchModel'           => $searchModel,
             'dataProvider'          => $dataProvider,
-            //'request_status'        => $request_status,
         ]);
     }
 
-    public function actionDuework() /** Меню срочная заявки в работе */
+    /**
+     * Deletes an existing Request model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @return string
+     */
+
+    public function actionDuework(): string
+        /** Меню срочная заявки в работе */
     {
         $searchModel = new SearchRequest();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -203,19 +224,17 @@ class RequestController extends Controller
     }
 
 
-
     /**
      * Displays a single Request model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView(int $id, string $viewName): string
+    public function actionView(int $id): string
     {
         $request = $this->findModel($id);
         return $this->render('view', [
             'model' => $request,
-            'viewNmae' => $viewName,
         ]);
     }
 
@@ -255,9 +274,9 @@ class RequestController extends Controller
      * Updates an existing Request model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
+     * @param string $viewName
      * @return Response|string
      * @throws NotFoundHttpException if the model cannot be found
-     * @throws StaleObjectException
      */
     public function actionUpdate(int $id, string $viewName)
     {
@@ -293,6 +312,38 @@ class RequestController extends Controller
 
         return $this->redirect(['request/' . $viewName]);
     }
+
+
+    public function actionComments(int $id, string $viewName)
+    {
+        $form = new CommentsForm();
+        $post = Yii::$app->request->post();
+        if ($form->load($post) && $form->validate()) {
+                if(!empty($form->comment))
+                    $this->commentService->createComment($id, Yii::$app->user->getId(), $form );
+            return $this->redirect(['request/' . $viewName]);
+        }
+
+
+        return $this->renderAjax('comments',[
+            'id'                => $id,
+            'model'             => $form,
+        ]);
+
+    }
+    public function actionCommentsv()
+    {
+        if (Yii::$app->getRequest()->isAjax ) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $form_model = new CommentsForm();
+            $post = Yii::$app->request->post();
+            $form_model->load($post);
+            return ActiveForm::validate($form_model);
+        }
+        return false;
+
+    }
+
 
     /**
      * Finds the Request model based on its primary key value.
