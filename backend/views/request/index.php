@@ -6,12 +6,8 @@
 /* @var $request_status */
 /* @var $viewName */
 
-use vizitm\entities\Users;
-use vizitm\forms\manage\comments\CommentsForm;
 use vizitm\services\request\RequestViewManage;
-use yii\base\BaseObject;
 use yii\base\InvalidConfigException;
-use yii\bootstrap4\Modal;
 use yii\web\JqueryAsset;
 use yii\widgets\Pjax;
 

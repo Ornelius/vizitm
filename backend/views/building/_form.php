@@ -14,7 +14,7 @@ use vizitm\helpers\StreetHelper;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'street_id')->dropDownList(StreetHelper::streetList()) ?>
-    <?= $form->field($model, 'buildingNumber')->textInput() ?>
+    <?= $form->field($model, 'buildingnumber')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

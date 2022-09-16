@@ -12,9 +12,10 @@ return [
     'name' => 'Admin(Vizit-M)',
     'language' => 'ru-RU',
     'basePath' => dirname(__DIR__),
+    'homeUrl'=> '/consolidate',
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log', 'debug'],
-    'defaultRoute' => '/request/new',
+    'defaultRoute' => 'consolidate/index',
     'modules' => [
         'debug' => [
             'class' => 'yii\debug\Module',
@@ -60,7 +61,7 @@ return [
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 'request/<page:\d+>' => '<controller>/<action>',
-                '' => 'request/new', //site/index
+                '' => 'consolidate/index', //site/index
                 '<_a:login|logout>' => 'auth/<_a>',
             ],
         ],

@@ -23,7 +23,8 @@ class UserHelper
             Users::POSITION_KIP                     => 'Инженер КИПиА',
             Users::POSITION_UCHETCHIK               => 'Учетчик',
             Users::POSITION_DEGURNI_OPERATOR        => 'Дежурный оператор',
-            Users::POSITION_POMOSHNIK_INGENERA      => 'Помошник инжнера'
+            Users::POSITION_POMOSHNIK_INGENERA      => 'Помошник инжнера',
+            Users::POSITION_POMOSHNIK_POMOSHNIKA      => 'Помошник помошника инжнера'
         ];
     }
 

@@ -1,9 +1,9 @@
 <?php
 
 namespace vizitm\entities\request;
+use vizitm\entities\building\Building;
 use vizitm\entities\comments\Comments;
 use vizitm\entities\Users;
-use vizitm\entities\building\Building;
 use vizitm\forms\manage\request\RequestEditForm;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -45,18 +45,18 @@ use yii\web\UploadedFile;
 class Request extends ActiveRecord
 {
 
-    const STATUS_NEW = 1;
-    const STATUS_WORK = 2;
-    const STATUS_DONE = 3;
-    const STATUS_DUE = 4;
-    const STATUS_DUE_WORK = 5;
+    const STATUS_NEW        = 1;
+    const STATUS_WORK       = 2;
+    const STATUS_DONE       = 3;
+    const STATUS_DUE        = 4;
+    const STATUS_DUE_WORK   = 5;
 
     const STATUS = [
-        'new' => self::STATUS_NEW,
-        'work' => self::STATUS_WORK,
-        'done' => self::STATUS_DONE,
-        'due' => self::STATUS_DUE,
-        'duework' => self::STATUS_DUE_WORK
+        'new'           => self::STATUS_NEW,
+        'work'          => self::STATUS_WORK,
+        'done'          => self::STATUS_DONE,
+        'due'           => self::STATUS_DUE,
+        'duework'       => self::STATUS_DUE_WORK,
     ];
 
     /**

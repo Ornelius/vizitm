@@ -220,18 +220,19 @@ class RequestViewManage
                             return false;
                         },
                         'staff'=> function(Request $request): bool {
+
                             $boll = false;
-                            if(
+                            if( //
                                 ($request->isNew() || Users::isPositionGalvaniEngineer($this->userID)) &&
                                 !$request->isDone() && $request->emptyDueDate() && !Users::isPositionDegurniOperator($this->userID)
                             )
                                 $boll = true;
-                            if(
+                            elseif(
                                 $request->isWork() && !$request->isDone() && $request->emptyDueDate() && !Users::isPositionDegurniOperator($this->userID)
                                 && (Users::isPositionGalvaniEngineer($this->userID) || Slaves::haveSlaves($this->userID))
                             )
                                 $boll = true;
-                            if( Users::isPositionGalvaniEngineer($this->userID) || !$request->isDone() && !$request->emptyDueDate())
+                            elseif( Users::isPositionGalvaniEngineer($this->userID) || !$request->isDone() && !$request->emptyDueDate())
                             {
                                 $boll = false;
                                 if ($request->due_date >= (time() + (4 * 60 * 60)))

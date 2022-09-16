@@ -58,7 +58,7 @@ class SearchRequest extends Request
             $query->andFilterWhere([
                 'status' => ['status' => self::STATUS_NEW]
             ]);
-        } elseif (self::STATUS[$status] === self::STATUS_WORK) { /** Заявка в работе **/
+        } elseif(self::STATUS[$status] === self::STATUS_WORK) { /** Заявка в работе **/
             $query->andFilterWhere([
                 'status' => ['status' => self::STATUS_WORK]
             ]);

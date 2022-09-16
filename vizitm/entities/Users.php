@@ -54,14 +54,15 @@ class Users extends ActiveRecord implements IdentityInterface
     }
 
 
-    const POSITION_ADMINISTRATOR        = 0;
-    const POSITION_TEPLOTEHNIK          = 1;
-    const POSITION_INGENER              = 2;
-    const POSITION_GL_INGENER           = 3;
-    const POSITION_KIP                  = 4;
-    const POSITION_UCHETCHIK            = 5;
-    const POSITION_DEGURNI_OPERATOR     = 6;
-    const POSITION_POMOSHNIK_INGENERA   = 7;
+    const POSITION_ADMINISTRATOR            = 0;
+    const POSITION_TEPLOTEHNIK              = 1;
+    const POSITION_INGENER                  = 2;
+    const POSITION_GL_INGENER               = 3;
+    const POSITION_KIP                      = 4;
+    const POSITION_UCHETCHIK                = 5;
+    const POSITION_DEGURNI_OPERATOR         = 6;
+    const POSITION_POMOSHNIK_INGENERA       = 7;
+    const POSITION_POMOSHNIK_POMOSHNIKA     = 8;
 
 
 

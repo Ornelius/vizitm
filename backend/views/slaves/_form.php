@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="street-form">
+<div class="slaves-form">
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'master_id')->hiddenInput(['value'=>Yii::$app->user->identity->id])->label(false); ?>
     <?= $form->field($model, 'slave_id')->dropDownList(UserHelper::ListAllUsersExceptSome(Yii::$app->user->identity->id), ['prompt' => 'Выберите подчиненного']) ?>
