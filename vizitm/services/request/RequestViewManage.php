@@ -231,9 +231,8 @@ class RequestViewManage
                                 && (Users::isPositionGalvaniEngineer($this->userID) || Slaves::haveSlaves($this->userID))
                             )
                                 $boll = true;
-                            if( Users::isPositionGalvaniEngineer($this->userID) && !$request->isDone() && !$request->emptyDueDate())
+                            if( Users::isPositionGalvaniEngineer($this->userID) || !$request->isDone() && !$request->emptyDueDate())
                             {
-                                $boll = false;
                                 if ($request->due_date >= (time() + (4 * 60 * 60)))
                                     $boll = true;
                             }

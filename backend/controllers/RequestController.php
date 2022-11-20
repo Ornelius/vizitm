@@ -359,4 +359,14 @@ class RequestController extends Controller
         }
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+
+    public function actionLogout(): Response
+    {
+        Yii::$app->user->logout();
+
+        return $this->goHome();
+    }
 }
+
+

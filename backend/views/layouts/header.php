@@ -33,7 +33,7 @@ use yii\helpers\Html;
         }
 
     </style>
-    <?= Html::csrfMetaTags() ?>
+
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
     <?= Html::a('<span class="logo-mini">ВМ</span><span class="logo-lg">' . Html::encode(Yii::$app->name) . '</span>', Html::encode(Yii::$app->homeUrl), ['class' => 'logo']) ?>
 

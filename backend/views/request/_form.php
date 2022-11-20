@@ -29,7 +29,6 @@ use yii\widgets\ActiveForm;
 
             //'enableClientValidation' => false,
         ]); ?>
-
     <?= $form->field($model, 'building_id')->dropDownList(RequestHelper::addressList(), ['prompt' => 'Выберите адрес объекта недвижимости']) ?>
 
     <?=
@@ -99,7 +98,7 @@ use yii\widgets\ActiveForm;
                     //'browseClass' => 'btn btn-success btn-block' ,
                     //'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ' ,
                     'browseLabel' => 'Добавить ФОТО',
-                    'maxFileSize'=>10002800,
+                    'maxFileSize'=>200002800,
                     'allowedFileExtensions' => [
                         'jpg',
                         'jpeg',

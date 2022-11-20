@@ -1,11 +1,11 @@
 <?php
 
 namespace vizitm\entities\address;
-use vizitm\entities\building\Building;
+use backend\entities\Building;
 
 use yii\db\ActiveRecord;
 
-/**
+/***
  * This is the model class for table "{{%street}}".
  *
  * @property int $id
